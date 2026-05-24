@@ -1,0 +1,15 @@
+# PlatformIO build artifacts
+.pio/
+.vscode/
+
+# Local IDE / editor
+.idea/
+*.swp
+*~
+
+# macOS
+.DS_Store
+
+# Don't commit local config overrides
+.env
+.envrc
