@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>OmniRemote 网页烧录器</title>
+    <title>OmniRemote Web Installer</title>
     <meta
       name="description"
-      content="一根 M5Stack StickS3 控全家空调。直接从 Chrome 或 Edge 把 OmniRemote 固件刷进去,不装 PlatformIO,不装 esptool。"
+      content="One M5Stack StickS3 controls every AC in your home. Flash OmniRemote firmware from Chrome or Edge — no PlatformIO, no esptool."
     />
     <script
       type="module"
@@ -45,7 +45,7 @@
         margin: 0; min-height: 100vh;
         background: var(--page); color: var(--text);
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-                     "Segoe UI", "Microsoft YaHei", sans-serif;
+                     "Segoe UI", sans-serif;
         line-height: 1.55;
       }
       main { width: min(1040px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 48px; }
@@ -117,83 +117,86 @@
       <header>
         <div class="topline">
           <div class="eyebrow">M5Stack StickS3 / ESP32-S3</div>
-          <a class="lang" href="./install-en.html">English</a>
+          <a class="lang" href="./">中文</a>
         </div>
-        <h1>OmniRemote 网页烧录器</h1>
+        <h1>OmniRemote Web Installer</h1>
         <p class="lede">
-          一根 M5Stack StickS3 控全家空调。直接从浏览器把 OmniRemote
-          固件刷进去,普通用户不需要装 PlatformIO 或 esptool。烧完拔线就用,不需要联网、不需要账号。
+          One M5Stack StickS3 controls every AC in your home. Flash OmniRemote
+          firmware to your StickS3 directly from the browser — no PlatformIO,
+          no Python, no esptool. After flashing it works offline forever:
+          no WiFi, no account, no app.
         </p>
       </header>
 
-      <section class="visual-grid" aria-label="OmniRemote 真机和屏幕">
+      <section class="visual-grid" aria-label="OmniRemote hardware and screens">
         <figure class="visual-card">
           <img
             class="visual-media"
             src="https://m5stack-doc.oss-cn-shenzhen.aliyuncs.com/1207/K150-stickS3_main-products_02.webp"
-            alt="M5Stack StickS3 真机外观"
+            alt="M5Stack StickS3 hardware"
           />
-          <figcaption>M5Stack StickS3 真机</figcaption>
+          <figcaption>M5Stack StickS3 hardware</figcaption>
         </figure>
         <figure class="visual-card">
-          <img class="visual-media" src="./assets/screen-scan.svg" alt="OmniRemote SCAN 配对屏" />
-          <figcaption>SCAN 撞库:长按 A,听到空调"嘀"就松手</figcaption>
+          <img class="visual-media" src="./assets/screen-scan.svg" alt="OmniRemote SCAN screen" />
+          <figcaption>SCAN: hold A, release when the AC beeps</figcaption>
         </figure>
         <figure class="visual-card">
-          <img class="visual-media" src="./assets/screen-home.svg" alt="OmniRemote HOME 主屏" />
-          <figcaption>HOME 主屏:A 短按一键开关全家空调</figcaption>
+          <img class="visual-media" src="./assets/screen-home.svg" alt="OmniRemote HOME screen" />
+          <figcaption>HOME: short-press A to toggle every saved AC</figcaption>
         </figure>
       </section>
 
       <section class="content-grid">
         <div class="panel flash-panel">
           <ul class="meta">
-            <li>固件 v0.3.0</li>
-            <li>目标 ESP32-S3</li>
-            <li>写入地址 0x0</li>
+            <li>Firmware v0.3.0</li>
+            <li>ESP32-S3</li>
+            <li>Offset 0x0</li>
             <li>~690 KB</li>
           </ul>
 
           <esp-web-install-button manifest="./firmware/v0.3.0/manifest.json">
-            <button slot="activate">连接并烧录 OmniRemote</button>
-            <span slot="unsupported">请用桌面版 Chrome 或 Microsoft Edge 打开本页。</span>
-            <span slot="not-allowed">请通过 HTTPS 或 localhost 打开本页。</span>
+            <button slot="activate">Connect and flash OmniRemote</button>
+            <span slot="unsupported">Use desktop Chrome or Microsoft Edge.</span>
+            <span slot="not-allowed">Open this page over HTTPS or localhost.</span>
           </esp-web-install-button>
 
           <p class="notice">
-            烧录完成后拔掉 USB,设备会用内置电池启动。如果屏幕不亮,双击侧边按键唤醒。
+            After flashing, unplug USB — the stick boots on its internal
+            battery. If the screen stays dark, double-press the side button.
           </p>
         </div>
 
         <aside class="panel">
-          <h2>使用步骤</h2>
+          <h2>How to use</h2>
           <ol>
-            <li><strong>电脑:</strong>用桌面版 Chrome 或 Microsoft Edge 打开本页。</li>
-            <li><strong>硬件:</strong>用能传数据的 USB-C 线把 StickS3 连到电脑。</li>
-            <li><strong>本页面:</strong>点上面"连接并烧录 OmniRemote"按钮,浏览器弹串口选择框时,选 StickS3 那个 USB CDC 设备。</li>
-            <li><strong>硬件:</strong>烧完拔 USB,屏幕显示 <code>OmniRemote v0.3</code> 开机动画。</li>
-            <li><strong>配对空调:</strong>把 StickS3 对准空调正面接收窗,<strong>长按正面大键 A</strong>。设备每 0.8 秒撞库一个码,听到"嘀"声立刻<strong>松手</strong>就完成配对。</li>
-            <li><strong>多台空调:</strong>走到下一台,菜单 B 滚到 <code>+ Add AC</code>,B 长按再来一次。最多存 6 台。</li>
-            <li><strong>日常用:</strong><code>A 短按</code> = 一键开关所有已存空调;<code>B 短按</code> 滚菜单调温度/模式,<code>B 长按</code> 执行。</li>
+            <li><strong>Computer:</strong> open this page in desktop Chrome or Microsoft Edge.</li>
+            <li><strong>Hardware:</strong> connect the StickS3 with a data-capable USB-C cable.</li>
+            <li><strong>This page:</strong> click "Connect and flash OmniRemote". In the serial-port picker, choose the StickS3 USB CDC device.</li>
+            <li><strong>Hardware:</strong> after flashing, unplug USB. The screen shows the <code>OmniRemote v0.3</code> splash.</li>
+            <li><strong>Pair an AC:</strong> point the stick at the AC, <strong>hold button A</strong>. The stick cycles a new code every 0.8 s. When you hear the AC beep, <strong>release</strong> A and you're paired.</li>
+            <li><strong>More ACs:</strong> walk to the next AC, B-scroll to <code>+ Add AC</code>, B-hold to pair again. Up to 6 ACs.</li>
+            <li><strong>Daily use:</strong> <code>A short</code> toggles every saved AC at once; <code>B short</code> scrolls the menu, <code>B long</code> runs the selected item (temp / mode / fan).</li>
           </ol>
         </aside>
       </section>
 
       <section class="panel" style="margin-top: 24px">
-        <h2>常见问题</h2>
+        <h2>Troubleshooting</h2>
         <ul>
-          <li>看不到串口:换一根<strong>能传数据</strong>的 USB-C 线(很多线只能充电),确认浏览器是桌面版 Chrome/Edge。</li>
-          <li>配对扫了 90 秒没反应:你这台空调可能不在内置 75 个变体里。点 SCAN 时按 <code>B</code> 短按强制锁定当前正在试的码;或者去仓库提 issue 告诉我品牌型号。</li>
-          <li>空调被打开了但屏幕没自动 FOUND:走得近一点(<1 m),或者听到响时 <code>B</code> 短按手动锁。</li>
-          <li>命令行兜底:在装了 PlatformIO 的机器上 <code>pio run -t upload -e m5sticks3-ac</code>。</li>
+          <li>No port listed: try another USB-C cable (many are charge-only), and confirm desktop Chrome / Edge.</li>
+          <li>SCAN cycled 90 s without a hit: your AC may not be in the 75 built-in variants. Press <code>B short</code> while still holding A to lock the current code; or open a GitHub issue with your AC's brand &amp; model.</li>
+          <li>AC reacted but the screen didn't auto-FOUND: move closer (&lt; 1 m); or tap <code>B short</code> to lock manually.</li>
+          <li>CLI fallback: on a machine with PlatformIO, <code>pio run -t upload -e m5sticks3-ac</code>.</li>
         </ul>
         <p class="fine-print">
-          硬件参考
-          <a href="https://docs.m5stack.com/en/core/StickS3">M5Stack StickS3 官方文档</a>。
-          底层用了
-          <a href="https://github.com/crankyoldgit/IRremoteESP8266">IRremoteESP8266</a> 和
-          <a href="https://github.com/esphome/esp-web-tools">esp-web-tools</a>。
-          源码 MIT 协议开源:
+          Hardware reference:
+          <a href="https://docs.m5stack.com/en/core/StickS3">M5Stack StickS3 docs</a>.
+          Built on
+          <a href="https://github.com/crankyoldgit/IRremoteESP8266">IRremoteESP8266</a> and
+          <a href="https://github.com/esphome/esp-web-tools">esp-web-tools</a>.
+          MIT-licensed source:
           <a href="https://github.com/openbrt/omniremote">github.com/openbrt/omniremote</a>
         </p>
       </section>

@@ -5,9 +5,11 @@
 > 一根棒控全家电器 — 基于 M5StickS3 的开源万能红外遥控固件。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Flash from browser](https://img.shields.io/badge/flash-browser-2dd4bf?logo=googlechrome&logoColor=white)](https://openbrt.github.io/omniremote/)
+[![Flash from browser](https://img.shields.io/badge/flash-browser-147e63?logo=googlechrome&logoColor=white)](https://openbrt.github.io/omniremote/)
 
-**🌐 Flash from your browser → <https://openbrt.github.io/omniremote/>**
+**🌐 Flash it from your browser:**
+- 中文 → <https://openbrt.github.io/omniremote/>
+- English → <https://openbrt.github.io/omniremote/install-en.html>
 
 ---
 
