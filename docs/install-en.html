@@ -133,9 +133,15 @@
           <img
             class="visual-media"
             src="https://m5stack-doc.oss-cn-shenzhen.aliyuncs.com/1207/K150-stickS3_main-products_02.webp"
-            alt="M5Stack StickS3 hardware"
+            alt="M5Stack StickS3 hardware — A is the front big button, B is the small button on the right side"
           />
-          <figcaption>M5Stack StickS3 hardware</figcaption>
+          <figcaption>
+            M5Stack StickS3<br/>
+            <span style="color: var(--accent); font-weight: 700;">A</span>
+            = front big button (rectangular, below the LCD with the blue accent) ·
+            <span style="color: var(--accent); font-weight: 700;">B</span>
+            = small button on the right side, near the top
+          </figcaption>
         </figure>
         <figure class="visual-card">
           <img class="visual-media" src="./assets/screen-scan.svg" alt="OmniRemote SCAN screen" />
@@ -170,13 +176,18 @@
 
         <aside class="panel">
           <h2>How to use</h2>
+          <figure style="margin: 0 0 14px; text-align: center;">
+            <img src="./assets/buttons.svg"
+                 alt="StickS3 button layout: A on the front face, B on the right side"
+                 style="max-width: 100%; height: auto; display: block; margin: 0 auto;" />
+          </figure>
           <ol>
             <li><strong>Computer:</strong> open this page in desktop Chrome or Microsoft Edge.</li>
             <li><strong>Hardware:</strong> connect the StickS3 with a data-capable USB-C cable.</li>
             <li><strong>This page:</strong> click "Connect and flash OmniRemote". In the serial-port picker, choose the StickS3 USB CDC device.</li>
             <li><strong>Hardware:</strong> after flashing, unplug USB. The screen shows the <code>OmniRemote v0.3</code> splash.</li>
-            <li><strong>Pair an AC:</strong> point the stick at the AC, <strong>hold button A</strong>. The stick cycles a new code every 0.8 s. When you hear the AC beep, <strong>release</strong> A and you're paired.</li>
-            <li><strong>More ACs:</strong> walk to the next AC, B-scroll to <code>+ Add AC</code>, B-hold to pair again. Up to 6 ACs.</li>
+            <li><strong>Pair an AC:</strong> point the stick at the AC, <strong>hold the front big button A</strong> (the rectangular one below the LCD with the blue accent). The stick cycles a new code every 0.8 s. When you hear the AC beep, <strong>release</strong> A and you're paired.</li>
+            <li><strong>More ACs:</strong> walk to the next AC, use the <strong>right-side small button B</strong> (on the device's right side, near the top) to scroll to <code>+ Add AC</code>, then B-hold to repeat. Up to 6 ACs.</li>
             <li><strong>Daily use:</strong> <code>A short</code> toggles every saved AC at once; <code>B short</code> scrolls the menu, <code>B long</code> runs the selected item (temp / mode / fan).</li>
           </ol>
         </aside>

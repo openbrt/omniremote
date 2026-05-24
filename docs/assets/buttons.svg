@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 270" role="img"
+     aria-label="M5StickS3 button layout: A on front face, B on right side">
+  <style>
+    .body { fill: #1f2937; stroke: #94a3b8; stroke-width: 1.5; }
+    .lcd  { fill: #0a0a0a; }
+    .btn  { fill: #1e3a8a; stroke: #38bdf8; stroke-width: 1.4; }
+    .btn-side { fill: #374151; stroke: #94a3b8; stroke-width: 1.2; }
+    .lbl-circle { fill: #147e63; }
+    .lbl-text   { fill: #ffffff; font-family: ui-sans-serif, -apple-system, sans-serif;
+                  font-weight: 800; font-size: 16px; text-anchor: middle; dominant-baseline: central; }
+    .anno { stroke: #147e63; stroke-width: 2; fill: none; stroke-linecap: round; }
+    .anno-text { fill: #147e63; font-family: ui-sans-serif, -apple-system, sans-serif;
+                 font-size: 12px; font-weight: 700; }
+  </style>
+
+  <!-- FRONT VIEW (left) -->
+  <g transform="translate(20,18)">
+    <text x="50" y="12" class="anno-text" text-anchor="middle">FRONT · 正面</text>
+    <!-- body -->
+    <rect class="body" x="22" y="20" width="56" height="120" rx="10"/>
+    <!-- LCD -->
+    <rect class="lcd"  x="30" y="30" width="40" height="70" rx="3"/>
+    <!-- BtnA (the big front button) -->
+    <rect class="btn"  x="32" y="108" width="36" height="22" rx="3"/>
+
+    <!-- arrow + A label -->
+    <path class="anno" d="M 90 119 L 76 119"/>
+    <polygon points="76,119 82,115 82,123" fill="#147e63"/>
+    <circle class="lbl-circle" cx="100" cy="119" r="11"/>
+    <text class="lbl-text" x="100" y="119">A</text>
+  </g>
+
+  <!-- SIDE VIEW (right) -->
+  <g transform="translate(160,18)">
+    <text x="45" y="12" class="anno-text" text-anchor="middle">RIGHT SIDE · 右侧</text>
+    <!-- side body (thin) -->
+    <rect class="body" x="40" y="20" width="20" height="120" rx="7"/>
+    <!-- BtnB (small side button near top) -->
+    <rect class="btn-side" x="38" y="42" width="6"  height="10" rx="2"/>
+
+    <!-- arrow + B label -->
+    <path class="anno" d="M 12 47 L 32 47"/>
+    <polygon points="32,47 26,43 26,51" fill="#147e63"/>
+    <circle class="lbl-circle" cx="0" cy="47" r="11"/>
+    <text class="lbl-text" x="0" y="47">B</text>
+  </g>
+
+  <!-- caption strip -->
+  <text x="135" y="180" text-anchor="middle"
+        font-family="ui-sans-serif, -apple-system, sans-serif"
+        font-size="14" font-weight="700" fill="#172033">
+    A = 正面大键 / front big button
+  </text>
+  <text x="135" y="202" text-anchor="middle"
+        font-family="ui-sans-serif, -apple-system, sans-serif"
+        font-size="14" font-weight="700" fill="#172033">
+    B = 右侧小键 / right-side small button
+  </text>
+  <text x="135" y="232" text-anchor="middle"
+        font-family="ui-sans-serif, -apple-system, sans-serif"
+        font-size="11" fill="#5c687a">
+    (顶部红色 reset/PWR 键不参与日常操作)
+  </text>
+  <text x="135" y="250" text-anchor="middle"
+        font-family="ui-sans-serif, -apple-system, sans-serif"
+        font-size="11" fill="#5c687a">
+    (top reset/PWR key is not used in daily operation)
+  </text>
+</svg>
