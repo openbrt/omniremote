@@ -173,12 +173,12 @@
             battery. If the screen stays dark, double-press the side button.
           </p>
           <p class="fine-print" style="margin: 0;">
-            <strong>Upgrading firmware keeps your paired ACs:</strong> when the
-            device is already running OmniRemote, the browser shows
-            <code>Update / Reset Data / Logs</code> buttons. Click
-            <code>Update</code> to overwrite only the app partition — your
-            NVS profiles survive. Only <code>Reset Data</code>, or ticking
-            <em>erase</em> at first install, will wipe them.
+            <strong>Re-flashing keeps your paired ACs by default:</strong> after
+            you click Install, the browser shows an "<em>Erase device</em>"
+            checkbox with Back / Next buttons. <strong>Leave it unchecked</strong>
+            and hit Next — only the firmware partitions (bootloader / partitions /
+            app) get rewritten; the NVS region is untouched, so every saved AC
+            profile survives. Tick Erase only when you want a clean slate.
           </p>
         </div>
 
