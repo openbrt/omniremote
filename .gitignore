@@ -2,6 +2,10 @@
 .pio/
 .vscode/
 
+# Generated MSC disk image (rebuild via tools/build-msc-image.py)
+firmware/src/msc_disk_image.h
+firmware/src/msc_disk_image.bin
+
 # Local IDE / editor
 .idea/
 *.swp

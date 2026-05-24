@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OmniRemote</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI",
+         "PingFang SC", "Microsoft YaHei", sans-serif;
+         max-width: 720px; margin: 40px auto; padding: 0 20px; color: #172033; }
+  @media (prefers-color-scheme: dark) {
+    body { color: #edf3fb; background: #11151c; }
+    a { color: #2fc49b; }
+  }
+  h1 { font-size: 2.4rem; margin: 0 0 8px; letter-spacing: -.01em; }
+  .lede { color: #5c687a; margin: 0 0 28px; }
+  .cta { display: inline-block; padding: 12px 18px; border-radius: 8px;
+         background: #147e63; color: #fff !important; text-decoration: none;
+         font-weight: 700; }
+  .cta:hover { background: #0f604c; }
+  section { margin-top: 28px; padding-top: 20px; border-top: 1px solid #ccd; }
+  @media (prefers-color-scheme: dark) {
+    section { border-top-color: #2a3545; }
+  }
+  ol li { margin: 6px 0; }
+  code { font-family: ui-monospace, Menlo, monospace;
+         background: rgba(127,127,127,.15); padding: 1px 5px; border-radius: 4px; }
+  .lang { float: right; }
+  .panel { display: none; }
+  .panel.on { display: block; }
+</style>
+</head>
+<body>
+<a class="lang" href="#" id="langBtn">English</a>
+<h1>OmniRemote</h1>
+
+<section id="zh" class="panel on">
+  <p class="lede">一根 M5Stack StickS3 控全家空调 —— 这就是你手上插着的设备。</p>
+
+  <p>
+    <a class="cta" href="https://openbrt.github.io/omniremote/">
+      → 打开烧录 / 配置页
+    </a>
+  </p>
+
+  <p>
+    用桌面版 Chrome 或 Microsoft Edge 打开上面的链接,把 USB-C 留着插着,网页就能
+    给这根 StickS3 烧录 / 升级固件。整个过程不联网设备本身、不需要装任何软件。
+  </p>
+
+  <h3>日常用法</h3>
+  <ol>
+    <li><strong>长按正面大键 A</strong> — 配对新空调,听到"嘀"声立刻松手。</li>
+    <li><strong>A 短按</strong> — 一键开关所有已配空调(toggle)。</li>
+    <li><strong>B 短按</strong> 滚菜单, <strong>B 长按</strong> 执行选项(温度/模式/风速)。</li>
+    <li><strong>同时按住 A+B 三秒</strong> — 清空所有 profile 重新开始。</li>
+  </ol>
+
+  <h3>源码 / 反馈</h3>
+  <ul>
+    <li>GitHub: <a href="https://github.com/openbrt/omniremote">github.com/openbrt/omniremote</a></li>
+    <li>遇到空调撞库 90 秒还匹配不上,去 GitHub issue 报你空调的品牌和型号。</li>
+  </ul>
+</section>
+
+<section id="en" class="panel">
+  <p class="lede">One M5Stack StickS3 controls every AC in your home — that's the device you have plugged in.</p>
+
+  <p>
+    <a class="cta" href="https://openbrt.github.io/omniremote/install-en.html">
+      → Open the flasher / config page
+    </a>
+  </p>
+
+  <p>
+    Open the link above in desktop Chrome or Microsoft Edge. Keep USB-C
+    connected and the page can flash / update firmware on this StickS3
+    directly. The device itself never goes online, and you don't install
+    anything on your computer.
+  </p>
+
+  <h3>Daily use</h3>
+  <ol>
+    <li><strong>Hold front big button A</strong> — pair a new AC. Release the moment you hear the beep.</li>
+    <li><strong>A short press</strong> — toggle every saved AC at once.</li>
+    <li><strong>B short</strong> scrolls the menu, <strong>B long</strong> runs the selected item (temp / mode / fan).</li>
+    <li><strong>Hold A+B for 3 s</strong> — factory reset, wipe every saved profile.</li>
+  </ol>
+
+  <h3>Source / feedback</h3>
+  <ul>
+    <li>GitHub: <a href="https://github.com/openbrt/omniremote">github.com/openbrt/omniremote</a></li>
+    <li>If SCAN runs the full 90 seconds without a match, file a GitHub issue with the AC's brand and model.</li>
+  </ul>
+</section>
+
+<script>
+const zh = document.getElementById('zh');
+const en = document.getElementById('en');
+const btn = document.getElementById('langBtn');
+function set(lang) {
+  zh.classList.toggle('on', lang === 'zh');
+  en.classList.toggle('on', lang === 'en');
+  btn.textContent = lang === 'zh' ? 'English' : '中文';
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+}
+btn.onclick = (e) => { e.preventDefault();
+  set(zh.classList.contains('on') ? 'en' : 'zh'); };
+const want = (navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+set(want);
+</script>
+</body>
+</html>

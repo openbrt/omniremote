@@ -1,0 +1,10 @@
+{
+  "name": "OmniRemote",
+  "tagline": "One stick, every appliance",
+  "hardware": "M5Stack StickS3 (ESP32-S3)",
+  "firmware_version": "0.4.0",
+  "config_page": "https://openbrt.github.io/omniremote/",
+  "config_page_en": "https://openbrt.github.io/omniremote/install-en.html",
+  "source": "https://github.com/openbrt/omniremote",
+  "license": "MIT"
+}
