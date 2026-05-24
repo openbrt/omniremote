@@ -1,24 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 480" role="img"
      aria-label="OmniRemote HOME screen mockup">
   <rect width="270" height="480" fill="#0a0a0a" rx="14"/>
-  <text x="135" y="130" text-anchor="middle" fill="#22d3ee"
-        font-family="ui-monospace, Menlo, monospace" font-weight="800" font-size="120">26</text>
-  <text x="135" y="178" text-anchor="middle" fill="#f5f6f8"
-        font-family="ui-monospace, Menlo, monospace" font-weight="700" font-size="32">Cool</text>
-  <text x="135" y="214" text-anchor="middle" fill="#9ca3af"
-        font-family="ui-monospace, Menlo, monospace" font-size="22">2 AC</text>
-  <line x1="22" y1="246" x2="248" y2="246" stroke="#374151" stroke-width="2"/>
 
-  <rect x="8" y="262" width="254" height="34" fill="#1e3a8a" rx="3"/>
-  <text x="22" y="288" fill="#ffffff"
+  <!-- "set" label clarifies the big number is the broadcast target temperature -->
+  <text x="135" y="46" text-anchor="middle" fill="#9ca3af"
+        font-family="ui-monospace, Menlo, monospace" font-weight="700" font-size="20">set</text>
+
+  <text x="135" y="156" text-anchor="middle" fill="#22d3ee"
+        font-family="ui-monospace, Menlo, monospace" font-weight="800" font-size="120">26</text>
+  <text x="225" y="116" text-anchor="middle" fill="#9ca3af"
+        font-family="ui-monospace, Menlo, monospace" font-weight="700" font-size="24">°C</text>
+
+  <text x="135" y="204" text-anchor="middle" fill="#f5f6f8"
+        font-family="ui-monospace, Menlo, monospace" font-weight="700" font-size="32">Cool</text>
+  <text x="135" y="236" text-anchor="middle" fill="#9ca3af"
+        font-family="ui-monospace, Menlo, monospace" font-size="22">2 AC</text>
+
+  <line x1="22" y1="266" x2="248" y2="266" stroke="#374151" stroke-width="2"/>
+
+  <rect x="8" y="282" width="254" height="34" fill="#1e3a8a" rx="3"/>
+  <text x="22" y="308" fill="#ffffff"
         font-family="ui-monospace, Menlo, monospace" font-weight="700" font-size="24">&gt; Temp +</text>
 
-  <text x="22" y="324" fill="#9ca3af"
+  <text x="22" y="346" fill="#9ca3af"
         font-family="ui-monospace, Menlo, monospace" font-size="24">  Temp -</text>
-  <text x="22" y="358" fill="#9ca3af"
+  <text x="22" y="382" fill="#9ca3af"
         font-family="ui-monospace, Menlo, monospace" font-size="24">  Mode Cool</text>
-  <text x="22" y="392" fill="#9ca3af"
+  <text x="22" y="418" fill="#9ca3af"
         font-family="ui-monospace, Menlo, monospace" font-size="24">  Fan Auto</text>
-  <text x="22" y="426" fill="#9ca3af"
-        font-family="ui-monospace, Menlo, monospace" font-size="24">  + Add AC</text>
 </svg>

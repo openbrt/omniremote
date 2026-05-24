@@ -163,13 +163,14 @@ struct Profile {
 static Profile profiles[MAX_PROFILES];
 
 // --- Home-screen menu ---------------------------------------------------------
-// A short = TOGGLE power (ON if off, OFF if on); A long-hold = SCAN pairing.
+// A short = TOGGLE power (ON if off, OFF if on).
+// A long-hold = SCAN to pair (works from any state) — so the menu doesn't
+// need its own "+ Add AC" entry; long-press A IS the universal "add" gesture.
 enum MenuItem : uint8_t {
     MENU_TEMP_UP,
     MENU_TEMP_DOWN,
     MENU_MODE,
     MENU_FAN,
-    MENU_ADD_AC,
     MENU_COUNT
 };
 
@@ -542,7 +543,6 @@ static void draw_home() {
     labels[MENU_TEMP_DOWN] = "Temp -";
     labels[MENU_MODE]      = mode_lbl;
     labels[MENU_FAN]       = fan_lbl;
-    labels[MENU_ADD_AC]    = (profile_count() < MAX_PROFILES) ? "+ Add AC" : "(full)";
 
     d.setTextSize(2);
     int y = 130;
@@ -586,9 +586,7 @@ static void enter_search() { enter_scan(); }
 
 static void enter_home() {
     st.app_mode = MODE_HOME;
-    // If there are no profiles, point cursor at "+ Add AC" so the natural
-    // first action (A long) starts a SEARCH.
-    if (profile_count() == 0) st.menu_cursor = MENU_ADD_AC;
+    if (st.menu_cursor >= MENU_COUNT) st.menu_cursor = 0;
     nvs_save();
     draw_home();
 }
@@ -617,6 +615,10 @@ static void complete_search_with(uint8_t brand_idx) {
         d.drawString("Full!", d.width() / 2, d.height() / 2);
     }
     delay(900);
+    // Normalize the just-paired AC away from SCAN-mode params (18C/Max/turbo)
+    // toward sensible HOME defaults (st.temp_c / Auto fan / no turbo). Without
+    // this, the AC keeps blasting at 18C until the user toggles via A-short.
+    if (r >= 0) broadcast_all();
     enter_home();
 }
 
@@ -626,7 +628,7 @@ static void factory_reset() {
     st.op_mode    = stdAc::opmode_t::kCool;
     st.fan        = stdAc::fanspeed_t::kAuto;
     st.power_on   = false;
-    st.menu_cursor = MENU_ADD_AC;
+    st.menu_cursor = 0;
     enter_home();
 }
 
@@ -672,9 +674,6 @@ static void do_menu_action() {
             st.power_on = true;
             broadcast_all();
             break;
-        case MENU_ADD_AC:
-            enter_scan();
-            return;
     }
     nvs_save();
     draw_home();
@@ -776,7 +775,7 @@ void setup() {
         d.drawString("one stick,", d.width() / 2, d.height() / 2);
         d.drawString("every appliance", d.width() / 2, d.height() / 2 + 14);
         d.setTextColor(DARKGREY);
-        d.drawString("v0.3", d.width() / 2, d.height() / 2 + 40);
+        d.drawString("v0.3.1", d.width() / 2, d.height() / 2 + 40);
         delay(1100);
     }
 

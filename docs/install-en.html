@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>OmniRemote Web Installer</title>
+    <title>OmniRemote Web Installer · v0.3.1</title>
     <meta
       name="description"
       content="One M5Stack StickS3 controls every AC in your home. Flash OmniRemote firmware from Chrome or Edge — no PlatformIO, no esptool."
@@ -156,13 +156,13 @@
       <section class="content-grid">
         <div class="panel flash-panel">
           <ul class="meta">
-            <li>Firmware v0.3.0</li>
+            <li>Firmware v0.3.1</li>
             <li>ESP32-S3</li>
             <li>Offset 0x0</li>
             <li>~690 KB</li>
           </ul>
 
-          <esp-web-install-button manifest="./firmware/v0.3.0/manifest.json">
+          <esp-web-install-button manifest="./firmware/v0.3.1/manifest.json">
             <button slot="activate">Connect and flash OmniRemote</button>
             <span slot="unsupported">Use desktop Chrome or Microsoft Edge.</span>
             <span slot="not-allowed">Open this page over HTTPS or localhost.</span>
@@ -186,9 +186,10 @@
             <li><strong>Hardware:</strong> connect the StickS3 with a data-capable USB-C cable.</li>
             <li><strong>This page:</strong> click "Connect and flash OmniRemote". In the serial-port picker, choose the StickS3 USB CDC device.</li>
             <li><strong>Hardware:</strong> after flashing, unplug USB. The screen shows the <code>OmniRemote v0.3</code> splash.</li>
-            <li><strong>Pair an AC:</strong> point the stick at the AC, <strong>hold the front big button A</strong> (the rectangular one below the LCD with the blue accent). The stick cycles a new code every 0.8 s. When you hear the AC beep, <strong>release</strong> A and you're paired.</li>
-            <li><strong>More ACs:</strong> walk to the next AC, use the <strong>right-side small button B</strong> (on the device's right side, near the top) to scroll to <code>+ Add AC</code>, then B-hold to repeat. Up to 6 ACs.</li>
-            <li><strong>Daily use:</strong> <code>A short</code> toggles every saved AC at once; <code>B short</code> scrolls the menu, <code>B long</code> runs the selected item (temp / mode / fan).</li>
+            <li><strong>Pair an AC:</strong> point the stick at the AC, <strong>hold the front big button A</strong> (the rectangular one below the LCD with the blue accent). During SCAN the stick deliberately sends "<strong>Cool + 18 °C + Max fan + Turbo + Beep</strong>" so the AC reacts as loudly as possible. <strong>Release</strong> A the moment you hear the AC beep.</li>
+            <li><strong>Pairing auto-normalizes:</strong> after release, the firmware re-broadcasts your HOME defaults (26 °C / Auto fan), so the AC doesn't stay stuck at 18 °C / Max / Turbo. Screen returns to HOME.</li>
+            <li><strong>More ACs:</strong> walk to the next AC and <strong>just hold A again</strong>. No menu navigation — long-press A is the universal "pair a new device" gesture. Up to 6 ACs.</li>
+            <li><strong>Daily use:</strong> <code>A short</code> toggles every saved AC at once. The big number on HOME (e.g. <code>26</code>) is the <strong>setpoint</strong> — what the next broadcast will set the temperature to, not a measured reading. <code>B short</code> scrolls the menu (temp ± / mode / fan); <code>B long</code> runs the selected item and broadcasts.</li>
           </ol>
         </aside>
       </section>
