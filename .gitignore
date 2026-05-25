@@ -6,6 +6,10 @@
 firmware/src/msc_disk_image.h
 firmware/src/msc_disk_image.bin
 
+# Dead-end hybrid (framework = arduino, espidf) attempt — kept locally as
+# postmortem material but not pushed. See feedback memory for lesson.
+firmware-idf/
+
 # Local IDE / editor
 .idea/
 *.swp

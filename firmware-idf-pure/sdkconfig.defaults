@@ -1,0 +1,10 @@
+# sdkconfig.defaults — IDF kconfig overrides for OmniRemote pure-IDF build.
+# PlatformIO merges these into the auto-generated sdkconfig on first configure.
+
+# Flash size + speed for M5StickS3.
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+
+# Console output via USB-Serial-JTAG (the M5StickS3 USB-C exposes this
+# automatically — no extra wiring needed). We'll switch to TinyUSB CDC
+# later when we add MSC composite.
+CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y
