@@ -1,0 +1,10 @@
+## OmniRemote main component — declared dependencies pulled by ESP-IDF
+## Component Manager.
+
+dependencies:
+  idf:
+    version: ">=5.0"
+  ## M5Stack's Unified library is IDF-native (ships idf_component.yml in
+  ## the upstream repo). Brings M5GFX (display) + button + power + IMU.
+  m5stack/M5Unified:
+    version: "^0.2.0"

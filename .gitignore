@@ -10,6 +10,13 @@ firmware/src/msc_disk_image.bin
 # postmortem material but not pushed. See feedback memory for lesson.
 firmware-idf/
 
+# IDF component manager auto-fetches these from the registry on first build.
+# They're huge (M5GFX alone has 600+ MB of font/picture frame data) and should
+# never be committed — dependencies.lock pins versions, registry does the rest.
+firmware-idf-pure/managed_components/
+firmware-idf-pure/dependencies.lock
+firmware-idf-pure/sdkconfig.m5sticks3
+
 # Local IDE / editor
 .idea/
 *.swp
