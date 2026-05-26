@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OmniRemote 配置 · 选你家的电器</title>
+  <meta name="description"
+        content="在浏览器里勾选你家有的空调品牌,通过 USB 推送到 OmniRemote。撞库只试你选的,SCAN 更快。" />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --page: #f6f8fb; --panel: #fff; --text: #172033; --muted: #5c687a;
+      --line: #d9e0ea; --accent: #147e63; --accent-dark: #0f604c;
+      --accent-soft: #dff5ee; --warn: #8a5a00; --warn-bg: #fff4d8;
+      --bad: #c0392b;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page: #11151c; --panel: #181f2a; --text: #edf3fb; --muted: #a8b2c1;
+        --line: #2a3545; --accent: #2fc49b; --accent-dark: #25ad88;
+        --accent-soft: #17382f; --warn: #ffd37a; --warn-bg: #3c2c0f;
+        --bad: #ff6b5b;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; background: var(--page); color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+    main { max-width: 880px; margin: 0 auto; padding: 40px 24px 96px; }
+    header { margin-bottom: 28px; }
+    .eyebrow { color: var(--accent); font-size: .85rem; font-weight: 750;
+               letter-spacing: 0; text-transform: uppercase; }
+    h1 { margin: 4px 0 10px; font-size: clamp(2.1rem, 5vw, 3.4rem);
+         line-height: 1.05; letter-spacing: -0.01em; }
+    .lede { color: var(--muted); max-width: 720px; margin: 0; font-size: 1.05rem; }
+
+    .panel { background: var(--panel); border: 1px solid var(--line);
+             border-radius: 8px; padding: 20px; margin-top: 20px; }
+    .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    button.primary, button.secondary {
+      border: 0; padding: 10px 16px; border-radius: 6px; font-weight: 700;
+      cursor: pointer; font: inherit;
+    }
+    button.primary { background: var(--accent); color: #fff; }
+    button.primary:hover { background: var(--accent-dark); }
+    button.primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    button.secondary { background: transparent; color: var(--accent);
+                       border: 1px solid var(--accent); }
+    .status { font-size: 0.95rem; color: var(--muted); }
+    .status.ok  { color: var(--accent); }
+    .status.bad { color: var(--bad); }
+
+    .group { margin-top: 20px; }
+    .group h2 { font-size: 1.05rem; margin: 0 0 8px; color: var(--muted);
+                font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 6px 14px; }
+    label.brand { display: flex; align-items: center; gap: 8px; padding: 4px 0;
+                  cursor: pointer; font-size: 0.95rem; }
+    label.brand input { margin: 0; cursor: pointer; }
+    label.brand .pid { color: var(--muted); font-size: 0.8rem; }
+
+    .actions { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line);
+               display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .summary { color: var(--muted); font-size: 0.95rem; }
+    .note { background: var(--warn-bg); color: var(--warn); border-radius: 6px;
+            padding: 10px 14px; margin: 16px 0; font-size: 0.93rem; }
+    code { background: var(--accent-soft); color: var(--text);
+           padding: 1px 5px; border-radius: 4px;
+           font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    a { color: var(--accent); }
+    .lang { float: right; color: var(--accent); font-weight: 700; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <a class="lang" href="./configure-en.html">English</a>
+      <div class="eyebrow">OmniRemote · configure</div>
+      <h1>选你家的电器</h1>
+      <p class="lede">
+        OmniRemote 撞库默认会试 83 个空调协议(全球+中国),完整一圈大约 1 分钟。
+        在下面勾选你家**实际有的**品牌,之后 SCAN 只试这些,几秒就能配上。
+      </p>
+    </header>
+
+    <div class="panel">
+      <div class="row">
+        <button id="connectBtn" class="primary">连接 OmniRemote</button>
+        <span id="status" class="status">需要 Chrome / Edge 桌面版,USB-C 接上 StickS3</span>
+      </div>
+      <p class="note" id="webSerialWarn" style="display:none">
+        你的浏览器不支持 Web Serial。请用桌面版 Chrome 或 Microsoft Edge 打开本页。
+      </p>
+    </div>
+
+    <div id="brandPanel" class="panel" style="opacity: .5; pointer-events: none;">
+      <div class="row" style="justify-content: space-between;">
+        <h2 style="margin: 0;">协议列表</h2>
+        <span class="summary" id="summary">已选 0 / 0</span>
+      </div>
+      <div class="actions" style="margin-top: 12px; padding-top: 0; border: 0;">
+        <button class="secondary" id="selectAllBtn">全选</button>
+        <button class="secondary" id="selectNoneBtn">全不选</button>
+        <button class="secondary" id="selectCommonBtn">仅常用 (Gree/Midea/Haier/TCL/海信)</button>
+      </div>
+      <div id="brandGroups"></div>
+    </div>
+
+    <div id="savePanel" class="panel" style="opacity: .5; pointer-events: none;">
+      <div class="row">
+        <button id="saveBtn" class="primary">推送到 OmniRemote</button>
+        <span id="saveStatus" class="status"></span>
+      </div>
+      <p class="note">
+        推送后设备会自动重启,把过滤后的品牌表写入 NVS。下次长按 A 进 SCAN 时只试你勾的协议。
+      </p>
+    </div>
+
+    <p style="margin-top: 32px; color: var(--muted); font-size: 0.9rem;">
+      还没烧 OmniRemote 固件? 先去 <a href="./">烧录页</a>(<a href="./install-en.html">EN</a>)。
+      源码: <a href="https://github.com/openbrt/omniremote">github.com/openbrt/omniremote</a>
+    </p>
+  </main>
+
+  <script>
+  // -------------------------------------------------------------------------
+  // OmniRemote configure — Web Serial + 83-brand picker
+  // -------------------------------------------------------------------------
+  const $ = s => document.querySelector(s);
+  const status     = $("#status");
+  const connectBtn = $("#connectBtn");
+  const brandPanel = $("#brandPanel");
+  const savePanel  = $("#savePanel");
+  const groupsEl   = $("#brandGroups");
+  const summaryEl  = $("#summary");
+  const saveBtn    = $("#saveBtn");
+  const saveStatus = $("#saveStatus");
+
+  // Set of brand display_names that ship enabled by default for "common" users.
+  const COMMON = new Set([
+    "Gree YAW1F", "Gree YBOFB", "Midea", "Midea/Coolix",
+    "Haier", "Haier YRW02", "Haier-176A", "Kelon/Hisense",
+    "TCL-112", "Hitachi", "Daikin", "Mitsubishi", "Panasonic"
+  ]);
+
+  // Brands array fetched from assets/brands.json (extracted from firmware).
+  let brands = [];
+  let enabled = [];   // Same length as brands, bool[]
+  let port = null, writer = null, reader = null;
+
+  if (!("serial" in navigator)) {
+    $("#webSerialWarn").style.display = "block";
+    connectBtn.disabled = true;
+  }
+
+  // ------------ build the brand list UI ------------
+  async function loadBrands() {
+    const r = await fetch("./assets/brands.json", { cache: "no-cache" });
+    brands = await r.json();
+    enabled = brands.map(b => COMMON.has(b.name));
+    renderBrands();
+  }
+  function renderBrands() {
+    // Group by protocol family (common prefix of name, very loose).
+    const groups = {};
+    brands.forEach((b, i) => {
+      const key = (b.name.split(/[ /-]/)[0] || "Other");
+      (groups[key] ||= []).push(i);
+    });
+    groupsEl.innerHTML = "";
+    Object.entries(groups).forEach(([k, idxs]) => {
+      const g = document.createElement("div");
+      g.className = "group";
+      g.innerHTML = `<h2>${k} (${idxs.length})</h2>`;
+      const grid = document.createElement("div");
+      grid.className = "grid";
+      idxs.forEach(i => {
+        const lbl = document.createElement("label");
+        lbl.className = "brand";
+        lbl.innerHTML = `
+          <input type="checkbox" data-i="${i}" ${enabled[i] ? "checked" : ""}>
+          <span>${brands[i].name}</span>
+          <span class="pid">${brands[i].protocol}${brands[i].model > 0 ? " #" + brands[i].model : ""}</span>`;
+        grid.appendChild(lbl);
+      });
+      g.appendChild(grid);
+      groupsEl.appendChild(g);
+    });
+    groupsEl.addEventListener("change", e => {
+      if (e.target.matches("input[type=checkbox]")) {
+        enabled[+e.target.dataset.i] = e.target.checked;
+        updateSummary();
+      }
+    });
+    updateSummary();
+  }
+  function updateSummary() {
+    summaryEl.textContent = `已选 ${enabled.filter(Boolean).length} / ${brands.length}`;
+  }
+  $("#selectAllBtn").onclick    = () => { enabled.fill(true);  syncCheckboxes(); };
+  $("#selectNoneBtn").onclick   = () => { enabled.fill(false); syncCheckboxes(); };
+  $("#selectCommonBtn").onclick = () => {
+    brands.forEach((b, i) => enabled[i] = COMMON.has(b.name));
+    syncCheckboxes();
+  };
+  function syncCheckboxes() {
+    groupsEl.querySelectorAll("input[type=checkbox]").forEach(cb => {
+      cb.checked = enabled[+cb.dataset.i];
+    });
+    updateSummary();
+  }
+
+  // ------------ Web Serial: connect, send, receive ------------
+  async function connect() {
+    try {
+      // OmniRemote TinyUSB VID/PID — accept anything Espressif-like.
+      port = await navigator.serial.requestPort({
+        filters: [{ usbVendorId: 0x303A }, { usbVendorId: 0x239A }, { }]
+      });
+      await port.open({ baudRate: 115200 });
+      writer = port.writable.getWriter();
+      reader = port.readable.getReader();
+      status.textContent = "已连接 — 选完品牌点 \"推送\"";
+      status.className = "status ok";
+      brandPanel.style.opacity = 1; brandPanel.style.pointerEvents = "auto";
+      savePanel.style.opacity  = 1; savePanel.style.pointerEvents  = "auto";
+      connectBtn.disabled = true;
+    } catch (e) {
+      status.textContent = "连接失败: " + e.message;
+      status.className = "status bad";
+    }
+  }
+  connectBtn.addEventListener("click", connect);
+
+  // ------------ Encode bitmap + send to firmware ------------
+  function encodeBitmap() {
+    const bytes = new Uint8Array(Math.ceil(brands.length / 8));
+    enabled.forEach((on, i) => { if (on) bytes[i >> 3] |= 1 << (i & 7); });
+    return Array.from(bytes).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+  saveBtn.addEventListener("click", async () => {
+    if (!writer) return;
+    const hex = encodeBitmap();
+    saveStatus.textContent = "推送中…";
+    saveStatus.className = "status";
+    try {
+      const cmd = `SET_ENABLED ${hex}\n`;
+      await writer.write(new TextEncoder().encode(cmd));
+      // Read up to 200 ms of response to confirm
+      const resp = await Promise.race([
+        readLine(reader),
+        new Promise(r => setTimeout(() => r("(no response)"), 800))
+      ]);
+      if (resp.startsWith("OK")) {
+        saveStatus.textContent = "已保存 — 设备正在重启";
+        saveStatus.className = "status ok";
+      } else {
+        saveStatus.textContent = "回应: " + resp;
+        saveStatus.className = "status";
+      }
+    } catch (e) {
+      saveStatus.textContent = "失败: " + e.message;
+      saveStatus.className = "status bad";
+    }
+  });
+  async function readLine(r) {
+    const dec = new TextDecoder();
+    let buf = "";
+    while (true) {
+      const { value, done } = await r.read();
+      if (done) return buf;
+      buf += dec.decode(value);
+      const i = buf.indexOf("\n");
+      if (i >= 0) return buf.slice(0, i);
+    }
+  }
+
+  loadBrands();
+  </script>
+</body>
+</html>

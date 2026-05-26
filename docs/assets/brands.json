@@ -1,0 +1,417 @@
+[
+  {
+    "protocol": "GREE",
+    "name": "Gree YAW1F",
+    "model": 1
+  },
+  {
+    "protocol": "GREE",
+    "name": "Gree YBOFB",
+    "model": 2
+  },
+  {
+    "protocol": "GREE",
+    "name": "Gree YX1FSF",
+    "model": 3
+  },
+  {
+    "protocol": "MIDEA",
+    "name": "Midea",
+    "model": -1
+  },
+  {
+    "protocol": "MIDEA24",
+    "name": "Midea-24",
+    "model": -1
+  },
+  {
+    "protocol": "COOLIX",
+    "name": "Midea/Coolix",
+    "model": -1
+  },
+  {
+    "protocol": "COOLIX48",
+    "name": "Coolix-48",
+    "model": -1
+  },
+  {
+    "protocol": "HAIER_AC",
+    "name": "Haier",
+    "model": -1
+  },
+  {
+    "protocol": "HAIER_AC_YRW02",
+    "name": "Haier YRW02",
+    "model": -1
+  },
+  {
+    "protocol": "HAIER_AC176",
+    "name": "Haier-176A",
+    "model": 1
+  },
+  {
+    "protocol": "HAIER_AC176",
+    "name": "Haier-176B",
+    "model": 2
+  },
+  {
+    "protocol": "HAIER_AC160",
+    "name": "Haier-160",
+    "model": -1
+  },
+  {
+    "protocol": "KELON",
+    "name": "Kelon/Hisense",
+    "model": -1
+  },
+  {
+    "protocol": "KELON168",
+    "name": "Kelon-168",
+    "model": -1
+  },
+  {
+    "protocol": "TCL112AC",
+    "name": "TCL-112",
+    "model": -1
+  },
+  {
+    "protocol": "TCL96AC",
+    "name": "TCL-96",
+    "model": -1
+  },
+  {
+    "protocol": "HITACHI_AC",
+    "name": "Hitachi",
+    "model": -1
+  },
+  {
+    "protocol": "HITACHI_AC1",
+    "name": "Hitachi-1A",
+    "model": 1
+  },
+  {
+    "protocol": "HITACHI_AC1",
+    "name": "Hitachi-1B",
+    "model": 2
+  },
+  {
+    "protocol": "HITACHI_AC2",
+    "name": "Hitachi-2",
+    "model": -1
+  },
+  {
+    "protocol": "HITACHI_AC3",
+    "name": "Hitachi-3",
+    "model": -1
+  },
+  {
+    "protocol": "HITACHI_AC344",
+    "name": "Hitachi-344",
+    "model": -1
+  },
+  {
+    "protocol": "HITACHI_AC264",
+    "name": "Hitachi-264",
+    "model": -1
+  },
+  {
+    "protocol": "HITACHI_AC296",
+    "name": "Hitachi-296",
+    "model": -1
+  },
+  {
+    "protocol": "HITACHI_AC424",
+    "name": "Hitachi-424",
+    "model": -1
+  },
+  {
+    "protocol": "DAIKIN",
+    "name": "Daikin",
+    "model": -1
+  },
+  {
+    "protocol": "DAIKIN2",
+    "name": "Daikin-2",
+    "model": -1
+  },
+  {
+    "protocol": "DAIKIN64",
+    "name": "Daikin-64",
+    "model": -1
+  },
+  {
+    "protocol": "DAIKIN128",
+    "name": "Daikin-128",
+    "model": -1
+  },
+  {
+    "protocol": "DAIKIN152",
+    "name": "Daikin-152",
+    "model": -1
+  },
+  {
+    "protocol": "DAIKIN160",
+    "name": "Daikin-160",
+    "model": -1
+  },
+  {
+    "protocol": "DAIKIN176",
+    "name": "Daikin-176",
+    "model": -1
+  },
+  {
+    "protocol": "DAIKIN200",
+    "name": "Daikin-200",
+    "model": -1
+  },
+  {
+    "protocol": "DAIKIN216",
+    "name": "Daikin-216",
+    "model": -1
+  },
+  {
+    "protocol": "DAIKIN312",
+    "name": "Daikin-312",
+    "model": -1
+  },
+  {
+    "protocol": "MITSUBISHI_AC",
+    "name": "Mitsubishi",
+    "model": -1
+  },
+  {
+    "protocol": "MITSUBISHI112",
+    "name": "Mits-112",
+    "model": -1
+  },
+  {
+    "protocol": "MITSUBISHI136",
+    "name": "Mits-136",
+    "model": -1
+  },
+  {
+    "protocol": "MITSUBISHI_HEAVY_88",
+    "name": "Mits.Hvy-88",
+    "model": -1
+  },
+  {
+    "protocol": "MITSUBISHI_HEAVY_152",
+    "name": "Mits.Hvy-152",
+    "model": -1
+  },
+  {
+    "protocol": "PANASONIC_AC",
+    "name": "Panasonic",
+    "model": -1
+  },
+  {
+    "protocol": "PANASONIC_AC32",
+    "name": "Panasonic-32",
+    "model": -1
+  },
+  {
+    "protocol": "TOSHIBA_AC",
+    "name": "Toshiba",
+    "model": -1
+  },
+  {
+    "protocol": "SHARP_AC",
+    "name": "Sharp",
+    "model": -1
+  },
+  {
+    "protocol": "FUJITSU_AC",
+    "name": "Fujitsu ARRAH",
+    "model": 1
+  },
+  {
+    "protocol": "FUJITSU_AC",
+    "name": "Fujitsu ARDB",
+    "model": 2
+  },
+  {
+    "protocol": "FUJITSU_AC",
+    "name": "Fujitsu ARREB",
+    "model": 3
+  },
+  {
+    "protocol": "SANYO_AC",
+    "name": "Sanyo",
+    "model": -1
+  },
+  {
+    "protocol": "SANYO_AC88",
+    "name": "Sanyo-88",
+    "model": -1
+  },
+  {
+    "protocol": "SANYO_AC152",
+    "name": "Sanyo-152",
+    "model": -1
+  },
+  {
+    "protocol": "CORONA_AC",
+    "name": "Corona",
+    "model": -1
+  },
+  {
+    "protocol": "LG",
+    "name": "LG",
+    "model": -1
+  },
+  {
+    "protocol": "LG2",
+    "name": "LG-2",
+    "model": -1
+  },
+  {
+    "protocol": "SAMSUNG_AC",
+    "name": "Samsung",
+    "model": -1
+  },
+  {
+    "protocol": "CARRIER_AC",
+    "name": "Carrier",
+    "model": -1
+  },
+  {
+    "protocol": "CARRIER_AC40",
+    "name": "Carrier-40",
+    "model": -1
+  },
+  {
+    "protocol": "CARRIER_AC64",
+    "name": "Carrier-64",
+    "model": -1
+  },
+  {
+    "protocol": "CARRIER_AC128",
+    "name": "Carrier-128",
+    "model": -1
+  },
+  {
+    "protocol": "KELVINATOR",
+    "name": "Kelvinator",
+    "model": -1
+  },
+  {
+    "protocol": "WHIRLPOOL_AC",
+    "name": "Whirlpool",
+    "model": -1
+  },
+  {
+    "protocol": "ELECTRA_AC",
+    "name": "Electra",
+    "model": -1
+  },
+  {
+    "protocol": "TECO",
+    "name": "Teco",
+    "model": -1
+  },
+  {
+    "protocol": "VESTEL_AC",
+    "name": "Vestel",
+    "model": -1
+  },
+  {
+    "protocol": "GOODWEATHER",
+    "name": "Goodweather",
+    "model": -1
+  },
+  {
+    "protocol": "AIRWELL",
+    "name": "Airwell",
+    "model": -1
+  },
+  {
+    "protocol": "AMCOR",
+    "name": "Amcor",
+    "model": -1
+  },
+  {
+    "protocol": "ARGO",
+    "name": "Argo",
+    "model": -1
+  },
+  {
+    "protocol": "AIRTON",
+    "name": "Airton",
+    "model": -1
+  },
+  {
+    "protocol": "DELONGHI_AC",
+    "name": "DeLonghi",
+    "model": -1
+  },
+  {
+    "protocol": "TROTEC",
+    "name": "Trotec",
+    "model": -1
+  },
+  {
+    "protocol": "TROTEC_3550",
+    "name": "Trotec-3550",
+    "model": -1
+  },
+  {
+    "protocol": "NEOCLIMA",
+    "name": "Neoclima",
+    "model": -1
+  },
+  {
+    "protocol": "TECHNIBEL_AC",
+    "name": "Technibel",
+    "model": -1
+  },
+  {
+    "protocol": "VOLTAS",
+    "name": "Voltas",
+    "model": -1
+  },
+  {
+    "protocol": "GORENJE",
+    "name": "Gorenje",
+    "model": -1
+  },
+  {
+    "protocol": "MIRAGE",
+    "name": "Mirage",
+    "model": -1
+  },
+  {
+    "protocol": "BOSCH144",
+    "name": "Bosch-144",
+    "model": -1
+  },
+  {
+    "protocol": "ECOCLIM",
+    "name": "Ecoclim",
+    "model": -1
+  },
+  {
+    "protocol": "RHOSS",
+    "name": "Rhoss",
+    "model": -1
+  },
+  {
+    "protocol": "TRUMA",
+    "name": "Truma",
+    "model": -1
+  },
+  {
+    "protocol": "YORK",
+    "name": "York",
+    "model": -1
+  },
+  {
+    "protocol": "BLUESTARHEAVY",
+    "name": "BlueStarHvy",
+    "model": -1
+  },
+  {
+    "protocol": "TRANSCOLD",
+    "name": "TransCold",
+    "model": -1
+  }
+]

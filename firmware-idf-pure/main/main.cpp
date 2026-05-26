@@ -42,6 +42,17 @@
 #include "soc/rtc_cntl_reg.h"
 #include "soc/soc.h"
 
+// ----------------------------------------------------------------------------
+// Brand-enable bitmap — persisted in NVS, settable via CDC "SET_ENABLED <hex>".
+// Bit i corresponds to BRANDS[i]. Default = all-1s (every brand tried).
+// ----------------------------------------------------------------------------
+static constexpr size_t CFG_MASK_BYTES = (256 / 8);   // room for 256 brands
+static uint8_t cfg_mask[CFG_MASK_BYTES];
+
+static bool brand_enabled(uint8_t i) {
+    return (cfg_mask[i >> 3] >> (i & 7)) & 1;
+}
+
 // -----------------------------------------------------------------------------
 // Hardware
 // -----------------------------------------------------------------------------
@@ -397,13 +408,21 @@ static void nvs_load() {
     for (auto& p : profiles) {
         if (p.brand_idx >= BRAND_COUNT) { p.used = false; p.brand_idx = 0; }
     }
+    // Brand-enable bitmap. Missing key = "all enabled" so existing installs
+    // keep working before the user touches the configure page.
+    if (prefs.isKey("brand_mask")) {
+        prefs.getBytes("brand_mask", cfg_mask, sizeof(cfg_mask));
+    } else {
+        memset(cfg_mask, 0xFF, sizeof(cfg_mask));
+    }
     st.app_mode = MODE_HOME;
     prefs.end();
 }
 
 static void nvs_save() {
     prefs.begin("acremote", false);
-    prefs.putBytes("profiles", profiles, sizeof(profiles));
+    prefs.putBytes("profiles",   profiles, sizeof(profiles));
+    prefs.putBytes("brand_mask", cfg_mask, sizeof(cfg_mask));
     prefs.putUChar("temp_c",   st.temp_c);
     prefs.putBool ("power_on", st.power_on);
     prefs.putUChar("op_mode",  static_cast<uint8_t>(st.op_mode));
@@ -936,10 +955,17 @@ void loop() {
             return;
         }
 
-        // 4) Otherwise cycle to next brand and try.
+        // 4) Otherwise cycle to next brand and try. Honour the user-configured
+        //    brand_mask (set via the configure web page) so SCAN only iterates
+        //    brands the user actually has at home.
         if (now - st.last_send_ms >= SEARCH_INTERVAL_MS) {
             if (st.last_send_ms != 0) {
-                st.brand_idx = (st.brand_idx + 1) % BRAND_COUNT;
+                // Advance to next enabled brand. If none are enabled (e.g.
+                // user unchecked all and pushed) fall back to plain rotate.
+                uint8_t guard = 0;
+                do {
+                    st.brand_idx = (st.brand_idx + 1) % BRAND_COUNT;
+                } while (!brand_enabled(st.brand_idx) && ++guard < BRAND_COUNT);
             }
             draw_scan_active();
             bool sent = send_ir();
@@ -977,6 +1003,92 @@ static void dbg(const char* msg, uint16_t color = WHITE) {
     g_dbg_y += 12;
 }
 
+// CDC RX line-buffered command parser. Supports:
+//   "SET_ENABLED <hex>\n"  — replace cfg_mask with given hex bitmap, persist,
+//                            ACK "OK <bits>", then esp_restart() so SCAN sees
+//                            the new mask on the next run.
+//   "GET_BRANDS\n"         — print one "BRAND <i> <name>\n" line per BRANDS[i],
+//                            then "END\n".
+//   "GET_ENABLED\n"        — print "MASK <hex>\n" with current cfg_mask.
+static char  cdc_rx_buf[512];
+static size_t cdc_rx_len = 0;
+
+static int hex_nyb(char c) {
+    if (c >= '0' && c <= '9') return c - '0';
+    if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+    if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+    return -1;
+}
+
+static void cdc_send(const char* s) {
+    if (!s) return;
+    tinyusb_cdcacm_write_queue(TINYUSB_CDC_ACM_0, (const uint8_t*)s, strlen(s));
+    tinyusb_cdcacm_write_flush(TINYUSB_CDC_ACM_0, pdMS_TO_TICKS(50));
+}
+
+static void cdc_handle_cmd(char* line) {
+    if (!strncmp(line, "SET_ENABLED ", 12)) {
+        const char* hex = line + 12;
+        uint8_t fresh[CFG_MASK_BYTES];
+        memset(fresh, 0, sizeof(fresh));
+        size_t bytes_in = 0;
+        while (hex[0] && hex[1] && bytes_in < sizeof(fresh)) {
+            int hi = hex_nyb(hex[0]), lo = hex_nyb(hex[1]);
+            if (hi < 0 || lo < 0) break;
+            fresh[bytes_in++] = (hi << 4) | lo;
+            hex += 2;
+        }
+        if (bytes_in == 0) { cdc_send("ERR no hex\n"); return; }
+        memcpy(cfg_mask, fresh, sizeof(cfg_mask));
+        nvs_save();
+        int enabled = 0;
+        for (size_t i = 0; i < BRAND_COUNT; i++) if (brand_enabled(i)) enabled++;
+        char ack[48];
+        snprintf(ack, sizeof(ack), "OK %d/%u enabled, rebooting\n",
+                 enabled, (unsigned)BRAND_COUNT);
+        cdc_send(ack);
+        vTaskDelay(pdMS_TO_TICKS(200));
+        esp_restart();
+    } else if (!strcmp(line, "GET_BRANDS")) {
+        for (size_t i = 0; i < BRAND_COUNT; i++) {
+            char ln[64];
+            snprintf(ln, sizeof(ln), "BRAND %u %s\n",
+                     (unsigned)i, BRANDS[i].display_name);
+            cdc_send(ln);
+        }
+        cdc_send("END\n");
+    } else if (!strcmp(line, "GET_ENABLED")) {
+        char ln[2 * CFG_MASK_BYTES + 8] = "MASK ";
+        size_t p = strlen(ln);
+        for (size_t i = 0; i < sizeof(cfg_mask); i++)
+            p += snprintf(ln + p, sizeof(ln) - p, "%02x", cfg_mask[i]);
+        snprintf(ln + p, sizeof(ln) - p, "\n");
+        cdc_send(ln);
+    } else if (line[0]) {
+        cdc_send("ERR unknown\n");
+    }
+}
+
+static void cdc_rx_cb(int /*itf*/, cdcacm_event_t* /*evt*/) {
+    uint8_t buf[64];
+    size_t  got = 0;
+    while (tinyusb_cdcacm_read(TINYUSB_CDC_ACM_0,
+                               buf, sizeof(buf), &got) == ESP_OK && got > 0) {
+        for (size_t i = 0; i < got; i++) {
+            char c = (char)buf[i];
+            if (c == '\r') continue;
+            if (c == '\n') {
+                cdc_rx_buf[cdc_rx_len < sizeof(cdc_rx_buf) ? cdc_rx_len : sizeof(cdc_rx_buf)-1] = 0;
+                cdc_handle_cmd(cdc_rx_buf);
+                cdc_rx_len = 0;
+            } else if (cdc_rx_len < sizeof(cdc_rx_buf) - 1) {
+                cdc_rx_buf[cdc_rx_len++] = c;
+            }
+        }
+        got = 0;
+    }
+}
+
 // "1200-baud touch" — Arduino-style convention: the host (esptool, PIO, etc.)
 // opens the CDC port at 1200 baud to ask the firmware to reboot into ROM
 // download mode. Avoids needing to physically hold the BOOT button between
@@ -1012,6 +1124,10 @@ static esp_err_t usb_composite_init(void) {
     tinyusb_cdcacm_register_callback(TINYUSB_CDC_ACM_0,
                                      CDC_EVENT_LINE_CODING_CHANGED,
                                      cdc_line_coding_cb);
+    // Hook line-buffered RX command parser (SET_ENABLED / GET_BRANDS).
+    tinyusb_cdcacm_register_callback(TINYUSB_CDC_ACM_0,
+                                     CDC_EVENT_RX,
+                                     cdc_rx_cb);
 
     dbg("usb: console");
     r = esp_tusb_init_console(TINYUSB_CDC_ACM_0);
