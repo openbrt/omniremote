@@ -13,7 +13,7 @@ list(REMOVE_ITEM SRCS "${CMAKE_CURRENT_LIST_DIR}/src/IRrecv.cpp")
 idf_component_register(
     SRCS         ${SRCS}
     INCLUDE_DIRS "src" "arduino_shim"
-    REQUIRES     driver esp_timer
+    REQUIRES     driver esp_timer nvs_flash
 )
 
 # IRremoteESP8266 ifdefs on ARDUINO_ARCH_ESP32 to pick the ESP32 GPIO/RMT

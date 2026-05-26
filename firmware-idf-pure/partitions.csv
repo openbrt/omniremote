@@ -1,0 +1,9 @@
+# OmniRemote partition table — 8 MB flash, no OTA, single factory app + NVS.
+# Default IDF table caps factory at 1 MB which is too tight once the MSC disk
+# image (~512 KB) lives in .rodata. Bump to 4 MB to leave headroom for future
+# code growth + TV/Fan code library expansion.
+#
+# Name,    Type, SubType,  Offset,   Size,   Flags
+nvs,       data, nvs,      0x9000,   0x6000
+phy_init,  data, phy,      0xf000,   0x1000
+factory,   app,  factory,  0x10000,  0x400000

@@ -30,6 +30,17 @@
 // ESP-IDF entry-point glue.
 #include "nvs_flash.h"
 #include "esp_err.h"
+#include "esp_log.h"
+
+// TinyUSB composite (CDC for the IDF console + MSC for the OmniRemote drive).
+#include "tinyusb.h"
+#include "tusb_cdc_acm.h"
+#include "tusb_console.h"
+#include "msc_disk.h"
+
+// Software-triggered download mode (1200-baud touch on CDC, like Arduino).
+#include "soc/rtc_cntl_reg.h"
+#include "soc/soc.h"
 
 // -----------------------------------------------------------------------------
 // Hardware
@@ -55,9 +66,14 @@ static const BrandEntry BRANDS[] = {
     {decode_type_t::GREE,                 "Gree YBOFB",   2},  // ~2016+ YAPOF3
     {decode_type_t::GREE,                 "Gree YX1FSF",  3},  // Soleus niche
 
-    // Midea (old narrow protocol first, newer 24-bit next)
+    // Midea (old narrow protocol first, newer 24-bit next).
+    // Many post-2018 Midea models (KFR-*/WDAD3 etc.) actually speak COOLIX
+    // under the hood — Midea is one of the brands that bundles COOLIX-based
+    // IR boards. Try both protocols.
     {decode_type_t::MIDEA,                "Midea",        -1},
     {decode_type_t::MIDEA24,              "Midea-24",     -1},
+    {decode_type_t::COOLIX,               "Midea/Coolix", -1},
+    {decode_type_t::COOLIX48,             "Coolix-48",    -1},
 
     // Haier (old simpler first, newest variants last)
     {decode_type_t::HAIER_AC,             "Haier",        -1},
@@ -176,6 +192,7 @@ enum MenuItem : uint8_t {
     MENU_TEMP_DOWN,
     MENU_MODE,
     MENU_FAN,
+    MENU_PROFILES,   // B-long here -> shows saved-brand list
     MENU_COUNT
 };
 
@@ -526,31 +543,30 @@ static void draw_home() {
     d.setTextColor(WHITE);
     d.drawString(mode_name(st.op_mode), w / 2, 66);
 
-    char nbuf[20];
-    snprintf(nbuf, sizeof(nbuf), "%u AC", (unsigned)profile_count());
-    d.setTextColor(LIGHTGREY);
-    d.drawString(nbuf, w / 2, 92);
-
+    // Power-OFF indicator (the AC count line moved into the menu so we don't
+    // duplicate it here in the header).
     if (!st.power_on && profile_count() > 0) {
-        d.setTextColor(RED);
         d.setTextSize(1);
-        d.drawString("OFF", w / 2, 112);
+        d.setTextColor(RED);
+        d.drawString("OFF", w / 2, 96);
     }
 
-    d.drawFastHLine(6, 124, w - 12, DARKGREY);
+    d.drawFastHLine(6, 110, w - 12, DARKGREY);
 
     // --- Menu list (size 2 for legibility) ---
     const char* labels[MENU_COUNT];
-    char mode_lbl[16], fan_lbl[16];
+    char mode_lbl[16], fan_lbl[16], prof_lbl[16];
     snprintf(mode_lbl, sizeof(mode_lbl), "Mode %s", mode_name(st.op_mode));
     snprintf(fan_lbl,  sizeof(fan_lbl),  "Fan %s",  fan_name(st.fan));
+    snprintf(prof_lbl, sizeof(prof_lbl), "%u AC",   (unsigned)profile_count());
     labels[MENU_TEMP_UP]   = "Temp +";
     labels[MENU_TEMP_DOWN] = "Temp -";
     labels[MENU_MODE]      = mode_lbl;
     labels[MENU_FAN]       = fan_lbl;
+    labels[MENU_PROFILES]  = prof_lbl;
 
     d.setTextSize(2);
-    int y = 130;
+    int y = 116;
     for (uint8_t i = 0; i < MENU_COUNT; i++) {
         bool sel = (i == st.menu_cursor);
         if (sel) {
@@ -657,6 +673,64 @@ static stdAc::fanspeed_t next_fan(stdAc::fanspeed_t f) {
     }
 }
 
+static void show_profiles_list() {
+    auto& d = M5.Display;
+    d.fillScreen(BLACK);
+    int w = d.width();
+
+    d.setTextDatum(top_center);
+    d.setTextColor(CYAN);
+    d.setTextSize(2);
+    d.drawString("Profiles", w / 2, 6);
+
+    d.setTextSize(1);
+    d.setTextColor(DARKGREY);
+    char hdr[24];
+    snprintf(hdr, sizeof(hdr), "%u of %u saved",
+             (unsigned)profile_count(), (unsigned)MAX_PROFILES);
+    d.drawString(hdr, w / 2, 32);
+
+    d.drawFastHLine(8, 48, w - 16, DARKGREY);
+
+    d.setTextDatum(top_left);
+    d.setTextSize(2);
+    int slot = 1;
+    int y = 56;
+    for (uint8_t i = 0; i < MAX_PROFILES; i++) {
+        if (!profiles[i].used) continue;
+        char line[24];
+        snprintf(line, sizeof(line), "%d. %s",
+                 slot++, BRANDS[profiles[i].brand_idx].display_name);
+        d.setTextColor(WHITE);
+        d.drawString(line, 8, y);
+        y += 22;
+        if (y > d.height() - 40) break;   // overflow guard
+    }
+    if (profile_count() == 0) {
+        d.setTextColor(YELLOW);
+        d.drawString("(empty)", 8, 60);
+        d.setTextSize(1);
+        d.setTextColor(LIGHTGREY);
+        d.drawString("hold A to pair", 8, 90);
+    }
+
+    d.drawFastHLine(8, d.height() - 28, w - 16, DARKGREY);
+    d.setTextDatum(top_center);
+    d.setTextSize(1);
+    d.setTextColor(GREEN);
+    d.drawString("press any key", w / 2, d.height() - 20);
+    d.setTextColor(LIGHTGREY);
+    d.drawString("to return", w / 2, d.height() - 8);
+
+    // Wait for any button press, then return.
+    while (true) {
+        M5.update();
+        if (M5.BtnA.wasClicked() || M5.BtnA.wasHold()
+         || M5.BtnB.wasClicked() || M5.BtnB.wasHold()) break;
+        delay(20);
+    }
+}
+
 static void do_menu_action() {
     switch (st.menu_cursor) {
         case MENU_TEMP_UP:
@@ -678,6 +752,9 @@ static void do_menu_action() {
             st.fan = next_fan(st.fan);
             st.power_on = true;
             broadcast_all();
+            break;
+        case MENU_PROFILES:
+            show_profiles_list();
             break;
     }
     nvs_save();
@@ -889,13 +966,89 @@ void loop() {
 // that our Preferences shim wraps, then drive the same setup() / loop()
 // pair we used under Arduino. The 20 ms delay inside loop() keeps the task
 // from starving FreeRTOS.
+// Visual debug helper — paints a line on the LCD AND echoes via ESP_LOGI to
+// USB-Serial-JTAG so we can see boot progress on either surface.
+static int g_dbg_y = 4;
+static void dbg(const char* msg, uint16_t color = WHITE) {
+    ESP_LOGI("boot", "%s", msg);
+    M5.Display.setTextColor(color);
+    M5.Display.setCursor(4, g_dbg_y);
+    M5.Display.print(msg);
+    g_dbg_y += 12;
+}
+
+// "1200-baud touch" — Arduino-style convention: the host (esptool, PIO, etc.)
+// opens the CDC port at 1200 baud to ask the firmware to reboot into ROM
+// download mode. Avoids needing to physically hold the BOOT button between
+// flashes once TinyUSB has taken over USB.
+static void cdc_line_coding_cb(int /*itf*/, cdcacm_event_t* evt) {
+    if (!evt || evt->type != CDC_EVENT_LINE_CODING_CHANGED) return;
+    const cdc_line_coding_t* lc = evt->line_coding_changed_data.p_line_coding;
+    if (lc && lc->bit_rate == 1200) {
+        ESP_LOGW("dl", "1200-baud touch detected — rebooting to ROM download");
+        // Set the persistent flag the ROM bootloader checks on next reset.
+        SET_PERI_REG_MASK(RTC_CNTL_OPTION1_REG, RTC_CNTL_FORCE_DOWNLOAD_BOOT);
+        vTaskDelay(pdMS_TO_TICKS(80));      // let host close the port cleanly
+        esp_restart();
+    }
+}
+
+static esp_err_t usb_composite_init(void) {
+    dbg("usb: install");
+    tinyusb_config_t cfg = {};
+    esp_err_t r = tinyusb_driver_install(&cfg);
+    if (r != ESP_OK) { char b[24]; snprintf(b,sizeof(b),"  FAIL 0x%X",r); dbg(b, RED); return r; }
+    dbg("  ok",  GREEN);
+
+    dbg("usb: cdc");
+    tinyusb_config_cdcacm_t acm = {};
+    acm.usb_dev  = TINYUSB_USBDEV_0;
+    acm.cdc_port = TINYUSB_CDC_ACM_0;
+    r = tusb_cdc_acm_init(&acm);
+    if (r != ESP_OK) { char b[24]; snprintf(b,sizeof(b),"  FAIL 0x%X",r); dbg(b, RED); return r; }
+    dbg("  ok",  GREEN);
+
+    // Hook 1200-baud-touch so future flashes don't need a physical button.
+    tinyusb_cdcacm_register_callback(TINYUSB_CDC_ACM_0,
+                                     CDC_EVENT_LINE_CODING_CHANGED,
+                                     cdc_line_coding_cb);
+
+    dbg("usb: console");
+    r = esp_tusb_init_console(TINYUSB_CDC_ACM_0);
+    if (r != ESP_OK) { char b[24]; snprintf(b,sizeof(b),"  FAIL 0x%X",r); dbg(b, RED); /* non-fatal */ }
+    else             dbg("  ok",  GREEN);
+
+    dbg("usb: msc");
+    msc_disk_init();
+    dbg("  ok",  GREEN);
+    return ESP_OK;
+}
+
 extern "C" void app_main(void) {
+    // NVS first (no display deps).
     esp_err_t r = nvs_flash_init();
     if (r == ESP_ERR_NVS_NO_FREE_PAGES || r == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
         r = nvs_flash_init();
     }
     ESP_ERROR_CHECK(r);
+
+    // Bring up the StickS3 hardware early so the LCD can serve as a visual
+    // log surface for boot diagnostics (TinyUSB / MSC init).
+    auto cfg = M5.config();
+    cfg.internal_spk = false;
+    cfg.internal_mic = true;
+    M5.begin(cfg);
+    M5.Display.setRotation(0);
+    M5.Display.setBrightness(180);
+    M5.Display.fillScreen(BLACK);
+    M5.Display.setTextSize(1);
+    dbg("OmniRemote v0.4");
+    dbg("nvs ok", GREEN);
+
+    usb_composite_init();
+    dbg("starting app...");
+    delay(1500);   // let user see boot status on LCD
 
     setup();
     for (;;) loop();

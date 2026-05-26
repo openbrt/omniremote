@@ -17,6 +17,10 @@ firmware-idf-pure/managed_components/
 firmware-idf-pure/dependencies.lock
 firmware-idf-pure/sdkconfig.m5sticks3
 
+# Generated MSC disk image (rebuild via tools/build-msc-image.py).
+firmware-idf-pure/main/msc_disk_image.h
+firmware-idf-pure/main/msc_disk_image.bin
+
 # Local IDE / editor
 .idea/
 *.swp

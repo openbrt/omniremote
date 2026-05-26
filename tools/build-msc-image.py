@@ -21,8 +21,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "msc-disk-files"
-OUT_HEADER = ROOT / "firmware" / "src" / "msc_disk_image.h"
-OUT_BIN    = ROOT / "firmware" / "src" / "msc_disk_image.bin"
+# Pure-IDF main lives under firmware-idf-pure/main/; the generated header is
+# what msc_disk.c includes, the .bin is kept for debugging convenience.
+OUT_HEADER = ROOT / "firmware-idf-pure" / "main" / "msc_disk_image.h"
+OUT_BIN    = ROOT / "firmware-idf-pure" / "main" / "msc_disk_image.bin"
 
 DISK_SIZE     = 512 * 1024          # 512 KB — plenty for README + JSON
 VOLUME_LABEL  = "OmniRemote"
@@ -102,6 +104,44 @@ def build_with_hdiutil(image_path: Path, payload_dir: Path):
         shutil.copy(dmg, image_path)
 
 
+def patch_fat_volume_label(image_path: Path):
+    """Force the BPB + root-dir volume label to mixed case so Finder shows
+    'OmniRemote' instead of 'OMNIREMOTE'. Lifted from slidecue/tools/."""
+    data = bytearray(image_path.read_bytes())
+    label = VOLUME_LABEL.encode("ascii").ljust(11, b" ")[:11]
+
+    # Superfloppy layout: filesystem starts at offset 0. (If we ever switch
+    # back to MBR + partition, walk LBA from the partition table here.)
+    base = 0
+    if data[0x1FE:0x200] == b"\x55\xAA" and data[0x1C2] != 0:
+        part_lba = int.from_bytes(data[0x1C6:0x1CA], "little")
+        base = part_lba * 512
+
+    # 1) BPB extended volume label (the field most tools read first).
+    data[base + 0x2B:base + 0x36] = label
+
+    # 2) Root-directory volume-label entry (attribute 0x08) — Finder reads
+    #    this on macOS.
+    bpb = data[base:base + 64]
+    bytes_per_sector = int.from_bytes(bpb[11:13], "little")
+    reserved         = int.from_bytes(bpb[14:16], "little")
+    fat_count        = bpb[16]
+    root_entries     = int.from_bytes(bpb[17:19], "little")
+    sectors_per_fat  = int.from_bytes(bpb[22:24], "little")
+    if bytes_per_sector and root_entries:
+        root_start = base + (reserved + fat_count * sectors_per_fat) * bytes_per_sector
+        root_size  = root_entries * 32
+        for off in range(root_start, root_start + root_size, 32):
+            first = data[off]
+            if first == 0x00: break
+            if first == 0xE5: continue
+            if data[off + 11] == 0x08:   # ATTR_VOLUME_ID
+                data[off:off + 11] = label
+                break
+
+    image_path.write_bytes(data)
+
+
 def emit_header(image_path: Path):
     data = image_path.read_bytes()
     if len(data) < DISK_SIZE:
@@ -153,6 +193,7 @@ def main():
         else:
             sys.exit("No FAT12 builder. brew install mtools  (or apt install mtools)")
 
+    patch_fat_volume_label(OUT_BIN)
     emit_header(OUT_BIN)
 
 

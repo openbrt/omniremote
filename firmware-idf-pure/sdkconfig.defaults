@@ -4,7 +4,24 @@
 # Flash size + speed for M5StickS3.
 CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
 
-# Console output via USB-Serial-JTAG (the M5StickS3 USB-C exposes this
-# automatically — no extra wiring needed). We'll switch to TinyUSB CDC
-# later when we add MSC composite.
-CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y
+# --- USB stack -------------------------------------------------------------
+# Switch console off the built-in USB-Serial-JTAG and onto TinyUSB CDC so we
+# can run a composite USB device (CDC for the IDF console + MSC for the
+# OmniRemote docs drive) on the single USB-C port.
+CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=n
+CONFIG_ESP_CONSOLE_USB_CDC=y
+
+# TinyUSB classes — CDC + MSC, no HID / no DFU / no NCM.
+CONFIG_TINYUSB_CDC_ENABLED=y
+CONFIG_TINYUSB_MSC_ENABLED=y
+CONFIG_TINYUSB_HID_ENABLED=n
+CONFIG_TINYUSB_MIDI_ENABLED=n
+CONFIG_TINYUSB_NET_MODE_NONE=y
+
+# Device identity (override in usb_descriptors.c if we ship a custom one).
+CONFIG_TINYUSB_DESC_USE_DEFAULT_VID=y
+CONFIG_TINYUSB_DESC_USE_DEFAULT_PID=y
+CONFIG_TINYUSB_DESC_MANUFACTURER_STRING="OmniRemote"
+CONFIG_TINYUSB_DESC_PRODUCT_STRING="OmniRemote"
+CONFIG_TINYUSB_DESC_CDC_STRING="OmniRemote Console"
+CONFIG_TINYUSB_DESC_MSC_STRING="OmniRemote Docs"

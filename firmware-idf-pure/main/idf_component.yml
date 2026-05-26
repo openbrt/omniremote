@@ -8,3 +8,8 @@ dependencies:
   ## the upstream repo). Brings M5GFX (display) + button + power + IMU.
   m5stack/M5Unified:
     version: "^0.2.0"
+  ## TinyUSB wrapper from Espressif — drives composite CDC + MSC over
+  ## the M5StickS3's USB-C port. CDC carries the IDF console (ESP_LOGI etc),
+  ## MSC exposes a read-only OmniRemote drive with README/install link.
+  espressif/esp_tinyusb:
+    version: "^1.4.0"
