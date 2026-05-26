@@ -99,25 +99,41 @@ typedef float  float_t;
 }  // extern "C"
 #endif
 
-// ============================================================================
-// Stub Serial — IRremoteESP8266 uses Serial.print* in a few debug paths that
-// OmniRemote never exercises. We provide a sink that just discards output.
-// ============================================================================
+// Forward-declare String so SerialReal_ below can take it by reference.
+// Full String class definition lives further down.
 #ifdef __cplusplus
-class SerialStub_ {
+class String;
+
+#include <stdarg.h>
+
+// "Serial" routes into IDF's console (USB-Serial-JTAG by default on M5StickS3
+// via sdkconfig). Just enough surface for OmniRemote's logging calls.
+class SerialReal_ {
  public:
     void begin(unsigned long) {}
     void end() {}
-    void flush() {}
-    template <typename T> size_t print(T)              { return 0; }
-    template <typename T> size_t print(T, int)         { return 0; }
-    template <typename T> size_t println(T)            { return 0; }
-    template <typename T> size_t println(T, int)       { return 0; }
-    size_t println()                                   { return 0; }
-    size_t write(uint8_t)                              { return 0; }
-    size_t write(const uint8_t*, size_t)               { return 0; }
+    void flush() { fflush(stdout); }
+    int printf(const char* fmt, ...) {
+        va_list ap; va_start(ap, fmt);
+        int n = vprintf(fmt, ap);
+        va_end(ap);
+        return n;
+    }
+    size_t print(const char* s)        { return s ? fputs(s, stdout) >= 0 ? strlen(s) : 0 : 0; }
+    size_t print(char c)               { putchar(c); return 1; }
+    size_t print(int n)                { return ::printf("%d",  n); }
+    size_t print(unsigned int n)       { return ::printf("%u",  n); }
+    size_t print(long n)               { return ::printf("%ld", n); }
+    size_t print(unsigned long n)      { return ::printf("%lu", n); }
+    inline size_t print(const String& s);    // defined below, after String
+    size_t println()                   { putchar('\n'); return 1; }
+    size_t println(const char* s)      { size_t n = print(s); putchar('\n'); return n + 1; }
+    template <typename T> size_t println(T v) { size_t n = print(v); putchar('\n'); return n + 1; }
+    inline size_t println(const String& s);  // defined below, after String
+    size_t write(uint8_t b)            { putchar(b); return 1; }
+    size_t write(const uint8_t* b, size_t n) { return fwrite(b, 1, n, stdout); }
 };
-static SerialStub_ Serial;
+static SerialReal_ Serial;
 #endif
 
 // ============================================================================
@@ -197,6 +213,10 @@ inline String operator+(const char* lhs, const String& rhs) {
 inline String operator+(char lhs, const String& rhs) {
     return String(lhs) + rhs;
 }
+
+// SerialReal_ methods that depend on the now-complete String type.
+inline size_t SerialReal_::print(const String& s)   { return print(s.c_str()); }
+inline size_t SerialReal_::println(const String& s) { return println(s.c_str()); }
 #endif
 
 // ============================================================================
