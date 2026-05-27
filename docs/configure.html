@@ -217,9 +217,11 @@
   // ------------ Web Serial: connect, send, receive ------------
   async function connect() {
     try {
-      // OmniRemote TinyUSB VID/PID — accept anything Espressif-like.
+      // OmniRemote TinyUSB shows up under Espressif's VID (0x303A). Allow Adafruit
+      // (0x239A) too since some hobbyist M5 forks use it. Omitting the filter
+      // entirely would also work but the picker is friendlier when scoped.
       port = await navigator.serial.requestPort({
-        filters: [{ usbVendorId: 0x303A }, { usbVendorId: 0x239A }, { }]
+        filters: [{ usbVendorId: 0x303A }, { usbVendorId: 0x239A }]
       });
       await port.open({ baudRate: 115200 });
       writer = port.writable.getWriter();
