@@ -1129,10 +1129,11 @@ static esp_err_t usb_composite_init(void) {
                                      CDC_EVENT_RX,
                                      cdc_rx_cb);
 
-    dbg("usb: console");
-    r = esp_tusb_init_console(TINYUSB_CDC_ACM_0);
-    if (r != ESP_OK) { char b[24]; snprintf(b,sizeof(b),"  FAIL 0x%X",r); dbg(b, RED); /* non-fatal */ }
-    else             dbg("  ok",  GREEN);
+    // NOTE: deliberately NOT calling esp_tusb_init_console() — that wrapper
+    // installs its own RX handler on CDC_ACM_0 to feed stdin, which steals
+    // RX events from our SET_ENABLED / 1200-baud-touch callbacks. Console
+    // output goes to /dev/null in this build; ESP_LOGI calls still emit but
+    // don't reach the host. Use the LCD `dbg()` strip for boot diagnostics.
 
     dbg("usb: msc");
     msc_disk_init();
