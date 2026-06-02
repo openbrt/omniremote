@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OmniRemote 配置 · 选你家的电器</title>
+  <title>OmniRemote 配置 · 选你家的空调</title>
   <meta name="description"
         content="在浏览器里勾选你家有的空调品牌,通过 USB 推送到 OmniRemote。撞库只试你选的,SCAN 更快。" />
   <style>
@@ -80,7 +80,7 @@
     <header>
       <a class="lang" href="./configure-en.html">English</a>
       <div class="eyebrow">OmniRemote · configure</div>
-      <h1>选你家的电器</h1>
+      <h1>选你家的空调</h1>
       <p class="lede">
         OmniRemote 撞库默认会试 83 个空调协议(全球+中国),完整一圈大约 1 分钟。
         在下面勾选你家**实际有的**品牌,之后 SCAN 只试这些,几秒就能配上。
@@ -252,7 +252,6 @@
     try {
       const cmd = `SET_ENABLED ${hex}\n`;
       await writer.write(new TextEncoder().encode(cmd));
-      // Read up to 200 ms of response to confirm
       const resp = await Promise.race([
         readLine(reader),
         new Promise(r => setTimeout(() => r("(no response)"), 800))

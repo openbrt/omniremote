@@ -359,6 +359,7 @@ static bool send_ir() {
     return ok;
 }
 
+
 // -----------------------------------------------------------------------------
 // NVS persistence + profile helpers
 // -----------------------------------------------------------------------------
@@ -876,7 +877,7 @@ void setup() {
         d.drawString("one stick,", d.width() / 2, d.height() / 2);
         d.drawString("every appliance", d.width() / 2, d.height() / 2 + 14);
         d.setTextColor(DARKGREY);
-        d.drawString("v0.4.0", d.width() / 2, d.height() / 2 + 40);
+        d.drawString("v0.5.1", d.width() / 2, d.height() / 2 + 40);
         delay(1100);
     }
 

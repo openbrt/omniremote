@@ -1,8 +1,8 @@
 # OmniRemote
 
-> One stick, every appliance — an open-source universal IR remote on M5StickS3.
+> One stick, every AC in the house — an open-source universal **air-conditioner** IR remote on M5StickS3.
 >
-> 一根棒控全家电器 — 基于 M5StickS3 的开源万能红外遥控固件。
+> 一根棒控全家空调 — 基于 M5StickS3 的开源万能**空调**红外遥控固件。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Flash from browser](https://img.shields.io/badge/flash-browser-147e63?logo=googlechrome&logoColor=white)](https://openbrt.github.io/omniremote/)
@@ -15,67 +15,75 @@
 
 ## What it is · 这是什么
 
-OmniRemote turns a **single M5StickS3** into a universal IR remote that
-controls every IR appliance in your home — ACs, TVs, fans, projectors,
-set-top boxes — through one physical button.
+OmniRemote turns a **single M5StickS3** into a universal AC IR remote that
+controls every air conditioner in your home through one physical button.
+83 AC protocol variants ship in firmware (Gree YAW1F / YBOFB / YX1FSF,
+Midea + Coolix, Daikin, Mitsubishi, Hitachi, Haier, TCL, Hisense, Panasonic, …).
 
-Walk into any room, press once, the right device responds. No phone app,
-no cloud account, no WiFi after setup.
+Walk into any room, press once, the AC there reacts. No phone app, no cloud
+account, no WiFi.
 
-把一根 **M5StickS3** 变成一个能控全家所有红外电器的万能遥控器,空调、电视、
-风扇、投影、机顶盒 — 一个按钮搞定。走进哪间屋,按一下,对应的设备响应。
-没有手机 App,不需要账号,配完之后不联网。
+把一根 **M5StickS3** 变成全家空调的万能遥控:固件里内置 83 个空调协议变体
+(格力 YAW1F/YBOFB/YX1FSF、美的+Coolix、大金、三菱、日立、海尔、TCL、海信、
+松下……)。走进哪间屋按一下,那间屋的空调响应。没有 App,不需要账号,
+配完不联网。
+
+> **Why AC-only?** We tried extending to TVs / fans / projectors via the
+> Flipper-IRDB code library in v0.5 and found that without a working source
+> remote to A/B against, hit rates on non-AC protocols are unacceptably low —
+> bit-ordering conventions vary across IR libraries and protocol variants are
+> hard to disambiguate. AC is the sweet spot because IRremoteESP8266 ships
+> per-brand state-machine encoders that pack `(mode, temp, fan)` into the
+> exact byte sequences each AC expects, **and** ACs emit an audible "beep"
+> on accepting a command, which the StickS3's mic can hear — so brand
+> discovery actually closes the loop. See [`feedback_irdb_send_is_hard`](https://github.com/openbrt/omniremote/issues) for the full post-mortem.
 
 ---
 
 ## How pairing works · 怎么配对
 
-**One gesture for every device type**: long-press button A. The stick cycles
-through known IR codes for that appliance type, one per ~800 ms. Watch / listen
-to your device — the **moment it reacts, release**. The last-sent code is saved
-as a profile.
+**One gesture**: long-press button A. The stick sweeps through enabled AC
+protocols (1 try per ~800 ms), sending "Cool + 18 °C + Max fan + Turbo + Beep"
+on each one to maximize how loudly the AC reacts. The device's built-in
+microphone listens for the AC's beep — the moment a beep is heard, the scan
+**auto-freezes** on the matching brand and that protocol becomes a saved
+profile. Typical pairing time: a few seconds.
 
-对每种设备**只有一个动作**:长按 A 键。设备每 800ms 试一个红外码。一边看着
-/ 听着你的电器,**它一有反应立刻松手**,刚才发出去的那条码就被保存。
+For ACs that don't beep, **B short = manual lock**: press it the instant you
+see the panel light up or feel airflow.
 
-| Device type | What "reaction" looks like                | Auto-detect |
-|-------------|-------------------------------------------|-------------|
-| **AC**      | "嘀" beep + airflow                       | ✅ mic detects beep, auto-freezes |
-| TV          | Screen lights up                          | ❌ user releases manually |
-| Fan         | Blades spin / power LED on                | ❌ user releases manually |
-| Projector   | Lamp ignites                              | ❌ user releases manually |
+**一个动作**: 长按 A。设备依次试启用的空调协议(每 ~800 ms 一条),广播
+"制冷 + 18°C + Max 风 + Turbo + Beep" 让空调反应最响。机器内置麦克风
+听到空调"嘀"声立刻**自动锁定**当前协议,存进 profile。通常几秒就配上。
 
-For AC, the device's built-in microphone listens for the AC's beep and
-**auto-freezes the scan on the matching brand** — usually under 10 seconds.
-For everything else you release the button by hand when you see the device
-respond.
-
-空调有 mic 自动识别 "嘀" 声 (通常 10 秒内就找到);其他设备用眼睛看到反应
-后手动松手。
+不带 beep 的空调用 **B 短按手动锁**:看到面板亮 / 感到出风,立刻按 B。
 
 ---
 
 ## Daily use · 日常使用
 
-- **A short press**: TOGGLE — broadcasts power on/off to every saved device.
-  The one in front of you reacts; the others (out of line-of-sight) ignore.
-- **A long-hold**: pair a new appliance (SCAN mode).
-- **B short**: scroll menu.
-- **B long**: execute selected menu item (temp ±, mode, fan speed, add device).
+- **A short press**: broadcast POWER toggle to every saved AC. The one
+  in front of you reacts; the others (out of line-of-sight) ignore.
+- **A long-hold**: pair a new AC (SCAN mode).
+- **B short**: scroll menu (temp ± / mode / fan).
+- **B long**: execute selected menu item and broadcast.
 - **A + B held 3 s**: factory reset, wipe all profiles.
+
+A short = 同时给所有已配空调发开关; A 长按 = SCAN 配新空调;
+B 短按滚菜单, B 长按执行;A+B 同时按 3 秒 = 出厂复位。
 
 ---
 
-## Status · 现状
+## Trim the brand list in the browser · 浏览器筛品牌
 
-- ✅ V0.3 (current) — AC support with 75+ protocol variants (Gree all 3 model variants,
-  Daikin / Mitsubishi / Hitachi / Haier / Midea / TCL / Hisense / Panasonic etc.)
-  + mic auto-detect + manual B-short lock fallback
-- 🚧 V1 (next) — **browser-based personalization**: pick the brands you actually
-  have at home on a static GitHub Pages site, flash the firmware **straight from
-  your browser** via [esp-web-tools](https://esphome.github.io/esp-web-tools/).
-  No CLI, no compile.
-- 🚧 V2 — TV / Fan / projector / set-top box code libraries, configured the same way.
+If you only have, say, Gree + Midea at home, SCAN tries the other 70+
+protocols for no reason. After flashing, open the [**configure page**](https://openbrt.github.io/omniremote/configure.html)
+in desktop Chrome / Edge, click "Connect", check only the brands you actually
+own. Web Serial pushes the bitmap straight into NVS — SCAN drops from ~80 s
+to ~5 s. Fully offline.
+
+只有 1-2 个空调品牌时,可以在[配置页](https://openbrt.github.io/omniremote/configure.html)
+勾选,SCAN 只试这些,从 80 秒变 5 秒。Web Serial 直接推到 NVS,不联网。
 
 ---
 
@@ -83,8 +91,9 @@ respond.
 
 - **M5Stack StickS3** — about ¥150 / $20
   - ESP32-S3-PICO-1, 8 MB Flash + 8 MB OPI PSRAM
-  - Built-in IR TX (GPIO 46) + IR RX (GPIO 42)
-  - 1.14" LCD + 2 buttons + I²S microphone (ES8311)
+  - Built-in IR TX (GPIO 46) + IR RX (GPIO 42, unused in this build)
+  - 1.14" LCD + 2 buttons + I²S microphone (ES8311) — mic is what enables
+    auto-detect of AC beep
   - 250 mAh internal LiPo, USB-C charging
 
 No external components needed.
@@ -93,12 +102,13 @@ No external components needed.
 
 ## Build & flash (CLI) · 命令行烧录
 
-For V0.3, until the browser flasher ships:
+For day-to-day use, [flash from the browser](https://openbrt.github.io/omniremote/).
+The CLI path is for development:
 
 ```bash
-cd firmware-ac-remote
-pio run -e m5sticks3-ac -t upload
-pio device monitor -e m5sticks3-ac
+cd firmware-idf-pure
+pio run -t upload
+pio device monitor
 ```
 
 Restore the original CueKit firmware if you flashed over it:
@@ -122,4 +132,4 @@ for new AC brand variants we don't cover yet.
 - [IRremoteESP8266](https://github.com/crankyoldgit/IRremoteESP8266) — the AC
   protocol library that makes the whole thing possible.
 - [M5Unified](https://github.com/m5stack/M5Unified) — board abstraction.
-- (Coming) [esp-web-tools](https://github.com/esphome/esp-web-tools) — browser flashing.
+- [esp-web-tools](https://github.com/esphome/esp-web-tools) — browser flashing.
