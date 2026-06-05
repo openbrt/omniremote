@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">OmniRemote overview</title>
+  <desc id="desc">A browser flashes OmniRemote to a StickS3. The StickS3 sends infrared commands to multiple air conditioners and uses its microphone to hear the AC beep during pairing.</desc>
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fbfd"/>
+      <stop offset="1" stop-color="#eef5f3"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#102033" flood-opacity=".13"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#147e63"/>
+    </marker>
+    <style>
+      .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .title { fill: #172033; font-size: 56px; font-weight: 850; }
+      .subtitle { fill: #5c687a; font-size: 23px; font-weight: 560; }
+      .label { fill: #172033; font-size: 22px; font-weight: 780; }
+      .small { fill: #5c687a; font-size: 17px; font-weight: 560; }
+      .chip { fill: #ffffff; stroke: #d9e0ea; stroke-width: 1.5; }
+      .chipText { fill: #172033; font-size: 16px; font-weight: 720; }
+      .panel { fill: #ffffff; stroke: #d9e0ea; stroke-width: 1.5; }
+      .accent { fill: #147e63; }
+      .accentText { fill: #147e63; font-size: 18px; font-weight: 800; }
+      .line { stroke: #147e63; stroke-width: 5; stroke-linecap: round; fill: none; marker-end: url(#arrow); }
+      .ir { stroke: #22b8cf; stroke-width: 4; stroke-linecap: round; fill: none; opacity: .85; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="620" rx="28" fill="url(#page)"/>
+
+  <text class="sans title" x="58" y="82">OmniRemote</text>
+  <text class="sans subtitle" x="60" y="122">Flash once. Pair by beep. Walk around with one universal AC remote.</text>
+
+  <g transform="translate(58 152)">
+    <rect class="chip" x="0" y="0" width="150" height="38" rx="19"/>
+    <circle cx="22" cy="19" r="8" fill="#147e63"/>
+    <text class="sans chipText" x="38" y="25">83 AC protocols</text>
+
+    <rect class="chip" x="166" y="0" width="120" height="38" rx="19"/>
+    <circle cx="188" cy="19" r="8" fill="#22b8cf"/>
+    <text class="sans chipText" x="204" y="25">No app</text>
+
+    <rect class="chip" x="302" y="0" width="128" height="38" rx="19"/>
+    <circle cx="324" cy="19" r="8" fill="#f59e0b"/>
+    <text class="sans chipText" x="340" y="25">No WiFi</text>
+
+    <rect class="chip" x="446" y="0" width="168" height="38" rx="19"/>
+    <circle cx="468" cy="19" r="8" fill="#7c3aed"/>
+    <text class="sans chipText" x="484" y="25">Mic beep detect</text>
+  </g>
+
+  <!-- Browser flasher -->
+  <g filter="url(#softShadow)" transform="translate(58 245)">
+    <rect class="panel" width="288" height="224" rx="16"/>
+    <rect width="288" height="42" rx="16" fill="#172033"/>
+    <circle cx="28" cy="21" r="6" fill="#ef4444"/>
+    <circle cx="50" cy="21" r="6" fill="#f59e0b"/>
+    <circle cx="72" cy="21" r="6" fill="#22c55e"/>
+    <text class="sans small" x="96" y="27" fill="#dbeafe">Chrome / Edge</text>
+    <text class="sans label" x="28" y="80">Browser flash</text>
+    <text class="sans small" x="28" y="112">Open GitHub Pages</text>
+    <text class="sans small" x="28" y="138">Connect over USB-C</text>
+    <rect x="28" y="160" width="232" height="40" rx="8" fill="#147e63"/>
+    <text class="sans" x="144" y="186" text-anchor="middle" fill="#ffffff" font-size="17" font-weight="800">Flash OmniRemote</text>
+  </g>
+
+  <!-- USB arrow -->
+  <path class="line" d="M372 356 C418 356 435 356 472 356"/>
+  <text class="sans accentText" x="404" y="335">USB</text>
+
+  <!-- StickS3 -->
+  <g filter="url(#softShadow)" transform="translate(500 218)">
+    <rect x="0" y="0" width="170" height="308" rx="24" fill="#1f2937" stroke="#94a3b8" stroke-width="3"/>
+    <rect x="25" y="28" width="120" height="168" rx="8" fill="#050505"/>
+    <text class="mono" x="85" y="70" text-anchor="middle" fill="#9ca3af" font-size="17" font-weight="800">set</text>
+    <text class="mono" x="85" y="133" text-anchor="middle" fill="#22d3ee" font-size="62" font-weight="900">26</text>
+    <text class="mono" x="134" y="105" text-anchor="middle" fill="#9ca3af" font-size="17" font-weight="800">C</text>
+    <text class="mono" x="85" y="164" text-anchor="middle" fill="#f5f6f8" font-size="20" font-weight="800">Cool</text>
+    <text class="mono" x="85" y="187" text-anchor="middle" fill="#9ca3af" font-size="15">3 AC</text>
+    <rect x="50" y="216" width="70" height="42" rx="7" fill="#1e3a8a" stroke="#38bdf8" stroke-width="3"/>
+    <text class="sans" x="85" y="244" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900">A</text>
+    <rect x="169" y="70" width="12" height="34" rx="5" fill="#374151" stroke="#94a3b8" stroke-width="2"/>
+    <text class="sans" x="192" y="95" fill="#147e63" font-size="20" font-weight="900">B</text>
+    <circle cx="85" cy="285" r="6" fill="#147e63"/>
+    <text class="sans small" x="85" y="336" text-anchor="middle">M5Stack StickS3</text>
+  </g>
+
+  <!-- IR waves -->
+  <g transform="translate(686 298)">
+    <path class="ir" d="M0 58 C34 36 34 18 0 -4"/>
+    <path class="ir" d="M24 84 C86 48 86 -10 24 -36"/>
+    <path class="ir" d="M54 112 C142 62 142 -28 54 -62"/>
+  </g>
+
+  <!-- AC units -->
+  <g filter="url(#softShadow)" transform="translate(820 215)">
+    <g>
+      <rect class="panel" x="0" y="0" width="298" height="74" rx="14"/>
+      <rect x="22" y="42" width="254" height="6" rx="3" fill="#d9e0ea"/>
+      <circle cx="262" cy="25" r="7" fill="#147e63"/>
+      <text class="sans label" x="24" y="30">Living room</text>
+      <text class="sans small" x="24" y="62">Gree YAW1F</text>
+    </g>
+    <g transform="translate(0 112)">
+      <rect class="panel" x="0" y="0" width="298" height="74" rx="14"/>
+      <rect x="22" y="42" width="254" height="6" rx="3" fill="#d9e0ea"/>
+      <circle cx="262" cy="25" r="7" fill="#147e63"/>
+      <text class="sans label" x="24" y="30">Bedroom</text>
+      <text class="sans small" x="24" y="62">Midea / Coolix</text>
+    </g>
+    <g transform="translate(0 224)">
+      <rect class="panel" x="0" y="0" width="298" height="74" rx="14"/>
+      <rect x="22" y="42" width="254" height="6" rx="3" fill="#d9e0ea"/>
+      <circle cx="262" cy="25" r="7" fill="#147e63"/>
+      <text class="sans label" x="24" y="30">Study</text>
+      <text class="sans small" x="24" y="62">Daikin</text>
+    </g>
+  </g>
+
+  <!-- Beep loop -->
+  <path d="M975 196 C870 138 700 140 625 206" stroke="#f59e0b" stroke-width="4" stroke-dasharray="10 10" fill="none" marker-end="url(#arrow)"/>
+  <text class="sans" x="766" y="140" fill="#8a5a00" font-size="18" font-weight="800">AC beep returns to mic</text>
+
+  <text class="sans small" x="60" y="565">Daily use: A short = broadcast POWER toggle. A long = scan and save a new AC.</text>
+  <text class="sans small" x="760" y="565">Configuration: choose your brands in the browser to make SCAN faster.</text>
+</svg>

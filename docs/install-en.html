@@ -193,7 +193,7 @@
             <li><strong>Computer:</strong> open this page in desktop Chrome or Microsoft Edge.</li>
             <li><strong>Hardware:</strong> connect the StickS3 with a data-capable USB-C cable.</li>
             <li><strong>This page:</strong> click "Connect and flash OmniRemote". In the serial-port picker, choose the StickS3 USB CDC device.</li>
-            <li><strong>Hardware:</strong> after flashing, unplug USB. The screen shows the <code>OmniRemote v0.3</code> splash.</li>
+            <li><strong>Hardware:</strong> after flashing, unplug USB. The screen shows the <code>OmniRemote v0.5.1</code> splash.</li>
             <li><strong>Pair an AC:</strong> point the stick at the AC, <strong>hold the front big button A</strong> (the rectangular one below the LCD with the blue accent). During SCAN the stick deliberately sends "<strong>Cool + 18 °C + Max fan + Turbo + Beep</strong>" so the AC reacts as loudly as possible. <strong>Release</strong> A the moment you hear the AC beep.</li>
             <li><strong>Pairing auto-normalizes:</strong> after release, the firmware re-broadcasts your HOME defaults (26 °C / Auto fan), so the AC doesn't stay stuck at 18 °C / Max / Turbo. Screen returns to HOME.</li>
             <li><strong>More ACs:</strong> walk to the next AC and <strong>just hold A again</strong>. No menu navigation — long-press A is the universal "pair a new device" gesture. Up to 6 ACs.</li>
@@ -206,7 +206,7 @@
         <h2>Speed up SCAN — only test your brands</h2>
         <p>By default SCAN walks all 83 built-in AC protocols (~80 s end to end).
           After flashing, open the
-          <a href="./configure.html">configure page</a> to tick only the brands
+          <a href="./configure-en.html">configure page</a> to tick only the brands
           you actually own at home. The stick will then sweep only those —
           usually a few seconds. Web Serial writes the bitmap straight to NVS,
           fully offline.</p>
@@ -216,7 +216,7 @@
         <h2>Troubleshooting</h2>
         <ul>
           <li>No port listed: try another USB-C cable (many are charge-only), and confirm desktop Chrome / Edge.</li>
-          <li>SCAN cycled 90 s without a hit: your AC may not be in the 75 built-in variants. Press <code>B short</code> while still holding A to lock the current code; or open a GitHub issue with your AC's brand &amp; model.</li>
+          <li>SCAN cycled 90 s without a hit: your AC may not be in the 83 built-in variants. Press <code>B short</code> while still holding A to lock the current code; or open a GitHub issue with your AC's brand &amp; model.</li>
           <li>AC reacted but the screen didn't auto-FOUND: move closer (&lt; 1 m); or tap <code>B short</code> to lock manually.</li>
           <li>CLI fallback: on a machine with PlatformIO, <code>pio run -t upload -e m5sticks3-ac</code>.</li>
         </ul>

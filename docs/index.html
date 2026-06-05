@@ -188,7 +188,7 @@
             <li><strong>电脑:</strong>用桌面版 Chrome 或 Microsoft Edge 打开本页。</li>
             <li><strong>硬件:</strong>用能传数据的 USB-C 线把 StickS3 连到电脑。</li>
             <li><strong>本页面:</strong>点上面"连接并烧录 OmniRemote"按钮,浏览器弹串口选择框时,选 StickS3 那个 USB CDC 设备。</li>
-            <li><strong>硬件:</strong>烧完拔 USB,屏幕显示 <code>OmniRemote v0.3</code> 开机动画。</li>
+            <li><strong>硬件:</strong>烧完拔 USB,屏幕显示 <code>OmniRemote v0.5.1</code> 开机动画。</li>
             <li><strong>配对空调:</strong>把 StickS3 对准空调正面接收窗,<strong>长按正面大键 A</strong>(LCD 下方那个带蓝色装饰的)。SCAN 期间设备故意发"<strong>制冷 + 18°C + Max 风 + Turbo + Beep</strong>"刺激空调最响反应,听到"嘀"声立刻<strong>松手</strong>。</li>
             <li><strong>配对完会自动归位:</strong>松手后设备会再发一次默认 26°C/Auto 风,空调不会停在 18°C 狂吹状态。屏幕回 HOME。</li>
             <li><strong>多台空调:</strong>走到下一台,再来一次 — <strong>就直接长按 A</strong>。不需要进菜单,长按 A 永远等于"配对新设备"。最多存 6 台。</li>
@@ -208,7 +208,7 @@
         <h2>常见问题</h2>
         <ul>
           <li>看不到串口:换一根<strong>能传数据</strong>的 USB-C 线(很多线只能充电),确认浏览器是桌面版 Chrome/Edge。</li>
-          <li>配对扫了 90 秒没反应:你这台空调可能不在内置 75 个变体里。点 SCAN 时按 <code>B</code> 短按强制锁定当前正在试的码;或者去仓库提 issue 告诉我品牌型号。</li>
+          <li>配对扫了 90 秒没反应:你这台空调可能不在内置 83 个变体里。点 SCAN 时按 <code>B</code> 短按强制锁定当前正在试的码;或者去仓库提 issue 告诉我品牌型号。</li>
           <li>空调被打开了但屏幕没自动 FOUND:走得近一点(<1 m),或者听到响时 <code>B</code> 短按手动锁。</li>
           <li>命令行兜底:在装了 PlatformIO 的机器上 <code>pio run -t upload -e m5sticks3-ac</code>。</li>
         </ul>

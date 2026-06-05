@@ -4,7 +4,7 @@
   <text x="135" y="78"  text-anchor="middle" fill="#facc15"
         font-family="ui-monospace, Menlo, monospace" font-weight="800" font-size="64">SCAN</text>
   <text x="135" y="148" text-anchor="middle" fill="#cbd5e1"
-        font-family="ui-monospace, Menlo, monospace" font-size="32">12 / 75</text>
+        font-family="ui-monospace, Menlo, monospace" font-size="32">12 / 83</text>
   <text x="135" y="220" text-anchor="middle" fill="#22d3ee"
         font-family="ui-monospace, Menlo, monospace" font-weight="700" font-size="36">Hitachi</text>
   <line x1="22" y1="270" x2="248" y2="270" stroke="#374151" stroke-width="2"/>

@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 360" role="img" aria-labelledby="title desc">
+  <title id="title">OmniRemote pairing flow</title>
+  <desc id="desc">Four steps: hold A to scan, send AC test commands, hear the AC beep, then save the matched protocol as a profile.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#147e63"/>
+    </marker>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#102033" flood-opacity=".11"/>
+    </filter>
+    <style>
+      .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .bg { fill: #f7fafc; }
+      .card { fill: #ffffff; stroke: #d9e0ea; stroke-width: 1.5; }
+      .step { fill: #147e63; font-size: 15px; font-weight: 850; }
+      .title { fill: #172033; font-size: 25px; font-weight: 850; }
+      .body { fill: #5c687a; font-size: 17px; font-weight: 560; }
+      .hint { fill: #172033; font-size: 17px; font-weight: 780; }
+      .arrow { stroke: #147e63; stroke-width: 4; stroke-linecap: round; fill: none; marker-end: url(#arrow); }
+      .ir { stroke: #22b8cf; stroke-width: 3; stroke-linecap: round; fill: none; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1120" height="360" rx="24"/>
+  <text class="sans title" x="42" y="56">Pairing is a closed loop: send a test frame, listen for the AC beep, save the match.</text>
+  <text class="sans body" x="42" y="86">配对不是猜到为止，而是用 StickS3 麦克风确认空调真的响应。</text>
+
+  <!-- Step 1 -->
+  <g filter="url(#softShadow)" transform="translate(42 126)">
+    <rect class="card" width="232" height="206" rx="14"/>
+    <text class="sans step" x="22" y="34">STEP 1</text>
+    <text class="sans title" x="22" y="68">Hold A</text>
+    <text class="sans body" x="22" y="102">Point at the AC</text>
+    <text class="sans body" x="22" y="128">and hold the</text>
+    <text class="sans body" x="22" y="154">front big button.</text>
+    <rect x="158" y="128" width="48" height="34" rx="6" fill="#1e3a8a" stroke="#38bdf8" stroke-width="2"/>
+    <text class="sans" x="182" y="151" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900">A</text>
+  </g>
+
+  <path class="arrow" d="M292 229 L344 229"/>
+
+  <!-- Step 2 -->
+  <g filter="url(#softShadow)" transform="translate(362 126)">
+    <rect class="card" width="232" height="206" rx="14"/>
+    <text class="sans step" x="22" y="34">STEP 2</text>
+    <text class="sans title" x="22" y="68">SCAN sweeps</text>
+    <text class="sans body" x="22" y="102">Every 800 ms:</text>
+    <text class="mono hint" x="22" y="132">Cool 18 C</text>
+    <text class="mono hint" x="22" y="158">Max fan</text>
+    <text class="mono hint" x="22" y="184">Turbo + Beep</text>
+    <path class="ir" d="M164 94 C184 82 184 66 164 54"/>
+    <path class="ir" d="M180 114 C214 90 214 56 180 36"/>
+  </g>
+
+  <path class="arrow" d="M612 229 L664 229"/>
+
+  <!-- Step 3 -->
+  <g filter="url(#softShadow)" transform="translate(682 126)">
+    <rect class="card" width="232" height="206" rx="14"/>
+    <text class="sans step" x="22" y="34">STEP 3</text>
+    <text class="sans title" x="22" y="68">AC beeps</text>
+    <text class="sans body" x="22" y="102">The built-in mic</text>
+    <text class="sans body" x="22" y="128">detects the beep</text>
+    <text class="sans body" x="22" y="154">and freezes SCAN.</text>
+    <circle cx="176" cy="137" r="33" fill="#fff4d8" stroke="#f59e0b" stroke-width="3"/>
+    <text class="mono" x="176" y="144" text-anchor="middle" fill="#8a5a00" font-size="20" font-weight="900">beep</text>
+  </g>
+
+  <path class="arrow" d="M932 229 L984 229"/>
+
+  <!-- Step 4 -->
+  <g filter="url(#softShadow)" transform="translate(1002 126)">
+    <rect class="card" width="76" height="206" rx="14"/>
+    <text class="sans step" x="18" y="34">DONE</text>
+    <rect x="18" y="54" width="40" height="40" rx="20" fill="#147e63"/>
+    <path d="M29 75 L36 83 L50 66" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <text class="sans" x="38" y="126" text-anchor="middle" fill="#172033" font-size="17" font-weight="850">Save</text>
+    <text class="sans" x="38" y="152" text-anchor="middle" fill="#5c687a" font-size="15" font-weight="650">profile</text>
+  </g>
+
+  <text class="sans body" x="42" y="342">No beep? Press B during SCAN to manually lock the protocol when you see the panel light up or feel airflow.</text>
+</svg>
