@@ -1,74 +1,75 @@
 # OmniRemote
 
+English | [中文](README.zh-CN.md)
+
 > One StickS3, every AC in the house.
-> 一根 M5Stack StickS3 控全家空调。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Flash from browser](https://img.shields.io/badge/flash-browser-147e63?logo=googlechrome&logoColor=white)](https://openbrt.github.io/omniremote/)
+[![Flash from browser](https://img.shields.io/badge/flash-browser-147e63?logo=googlechrome&logoColor=white)](https://openbrt.github.io/omniremote/install-en.html)
 
 ![OmniRemote overview](docs/assets/readme-hero.svg)
 
-## 30 秒看懂
+## What It Is
 
-OmniRemote 是一个开源的 **M5Stack StickS3 万能空调红外遥控固件**。烧录后，它会把一根 StickS3 变成全家的空调遥控器：长按配对空调，短按广播开关命令，只有你正对着的那台会收到红外信号。
+OmniRemote is open-source firmware that turns a **M5Stack StickS3** into a universal infrared remote for home air conditioners. Pair each AC once, then walk room to room and control the AC in front of you with one physical device. No phone app, cloud account, or WiFi is required after setup.
 
-| 你关心的 | 答案 |
+| Topic | Details |
 | --- | --- |
-| 硬件 | M5Stack StickS3，内置红外发射、屏幕、两个按键和麦克风 |
-| 覆盖 | 固件内置 83 个空调协议变体，覆盖 Gree、Midea、Haier、Daikin、Mitsubishi、Hitachi、TCL、Hisense、Panasonic 等 |
-| 配对 | 长按 A 进入 SCAN，设备逐个试协议；空调一响，麦克风听到 beep 后自动锁定 |
-| 日常 | A 短按把 POWER toggle 广播给所有已保存空调；对准哪台，哪台响应 |
-| 联网 | 烧录和配置用浏览器 USB 串口；设备本身不需要 WiFi、账号或 App |
+| Hardware | M5Stack StickS3 with built-in IR transmitter, screen, two buttons, and microphone |
+| Coverage | 83 built-in AC protocol variants, including Gree, Midea, Haier, Daikin, Mitsubishi, Hitachi, TCL, Hisense, Panasonic, and more |
+| Pairing | Hold A to enter SCAN; the stick tests protocols one by one and locks when the AC beeps |
+| Daily use | Short-press A to broadcast POWER toggle to all saved AC profiles; only the AC in line of sight reacts |
+| Connectivity | Browser flashing and configuration over USB; the device itself stays offline |
 
-## 马上使用
+## Quick Start
 
-| 步骤 | 做什么 | 结果 |
+| Step | Action | Result |
 | --- | --- | --- |
-| 1. 烧录 | 用桌面版 Chrome / Edge 打开 [中文烧录页](https://openbrt.github.io/omniremote/) 或 [English installer](https://openbrt.github.io/omniremote/install-en.html)，接上 StickS3，点连接并烧录 | 固件写入 StickS3 |
-| 2. 配对 | 对准空调，长按正面大键 A；听到空调 beep 或看到面板亮起时松手 | 当前协议保存为一个 AC profile |
-| 3. 使用 | A 短按广播开关；B 短按滚菜单；B 长按执行温度、模式、风速调整 | 不用手机，不用云端，直接拿着走 |
+| 1. Flash | Open the [English installer](https://openbrt.github.io/omniremote/install-en.html) or [Chinese installer](https://openbrt.github.io/omniremote/) in desktop Chrome / Edge, connect the StickS3, then flash the firmware | OmniRemote is installed on the StickS3 |
+| 2. Pair | Point the stick at an AC, hold the front A button, then release when you hear a beep or see the AC panel react | The matching protocol is saved as an AC profile |
+| 3. Use | Short-press A to toggle power; short-press B to scroll the menu; long-press B to run the selected temperature, mode, or fan command | One offline remote controls every paired AC |
 
 ![Pairing flow](docs/assets/pairing-flow.svg)
 
-## 按键速查
+## Button Map
 
 ![StickS3 button map](docs/assets/buttons.svg)
 
-| 操作 | 功能 |
+| Action | Function |
 | --- | --- |
-| A 短按 | 向所有已保存空调广播 POWER toggle |
-| A 长按 | 进入 SCAN，配对一台新空调 |
-| B 短按 | 滚动 HOME 菜单：温度、模式、风速、已保存 AC |
-| B 长按 | 执行当前菜单项并广播 |
-| SCAN 中 B 短按 | 对不会 beep 的空调，手动锁定当前协议 |
-| A + B 同按 3 秒 | 出厂复位，清空所有 profile |
+| A short press | Broadcast POWER toggle to every saved AC profile |
+| A long press | Enter SCAN and pair a new AC |
+| B short press | Scroll the HOME menu: temperature, mode, fan, saved ACs |
+| B long press | Run the selected menu item and broadcast it |
+| B short press during SCAN | Manually lock the current protocol for ACs that do not beep |
+| A + B held for 3 seconds | Factory reset and clear all profiles |
 
-## 浏览器筛品牌
+## Speed Up SCAN
 
-默认 SCAN 会尝试全部 83 个协议，完整一圈约 80 到 90 秒。如果家里只有一两个品牌，烧录后打开 [配置页](https://openbrt.github.io/omniremote/configure.html)，只勾选你家的品牌，Web Serial 会把品牌 bitmap 写入 NVS。之后 SCAN 只试这些协议，通常几秒就能命中。
+By default, SCAN walks through all 83 built-in protocols, which can take about 80 to 90 seconds end to end. If you only own one or two AC brands, flash the firmware first, then open the [configure page](https://openbrt.github.io/omniremote/configure-en.html) and select the brands you actually have. Web Serial writes the brand bitmap to NVS, and future SCAN runs only test those protocols.
 
-配置过程完全离线：电脑通过 USB 串口写入 StickS3，StickS3 不连网。
+Configuration is fully offline: the computer talks to the StickS3 over USB serial, and the StickS3 never joins a network.
 
-## 为什么只做空调
+## Why AC Only
 
-空调红外命令不是简单的“按键码”，而是每次把 `mode / temp / fan / power` 打包成品牌私有状态帧。OmniRemote 基于 [IRremoteESP8266](https://github.com/crankyoldgit/IRremoteESP8266) 的空调状态机编码器，所以能直接生成各品牌需要的完整帧。
+Air-conditioner IR commands are not simple button codes. Each command packs `mode / temp / fan / power` into a brand-specific state frame. OmniRemote builds on [IRremoteESP8266](https://github.com/crankyoldgit/IRremoteESP8266), which provides AC state-machine encoders that generate the full frames each brand expects.
 
-电视、风扇、投影等非空调协议在没有原遥控器做 A/B 验证时命中率不稳定：不同红外库的 bit-ordering、协议变体和型号差异很容易混淆。空调更适合自动发现，因为很多机型收到有效命令会发出 beep，StickS3 的麦克风可以把“发码 -> 听到响应 -> 锁定协议”闭环做完。
+TV, fan, and projector protocols are much harder to discover reliably without the original remote for A/B testing. Bit ordering, protocol variants, and model differences can be ambiguous across IR libraries. ACs are a better fit for automatic discovery because many units emit a beep after accepting a valid command, and the StickS3 microphone can close the loop: send a frame, hear the beep, save the protocol.
 
-## 硬件
+## Hardware
 
 - M5Stack StickS3
-- ESP32-S3-PICO-1，8 MB Flash + 8 MB OPI PSRAM
-- 内置 IR TX：GPIO 46
-- 内置 IR RX：GPIO 42，目前未使用
-- 1.14" LCD、A/B 两个按键、ES8311 I2S 麦克风
-- 250 mAh 内置电池，USB-C 充电和烧录
+- ESP32-S3-PICO-1, 8 MB Flash + 8 MB OPI PSRAM
+- Built-in IR TX on GPIO 46
+- Built-in IR RX on GPIO 42, currently unused
+- 1.14" LCD, A/B buttons, ES8311 I2S microphone
+- 250 mAh internal battery, USB-C charging and flashing
 
-不需要外接红外 LED、杜邦线或额外模块。
+No external IR LED, wires, or modules are required.
 
-## 开发者构建
+## Developer Build
 
-普通用户直接用 [网页烧录器](https://openbrt.github.io/omniremote/)。开发调试走 PlatformIO：
+Most users should use the [web installer](https://openbrt.github.io/omniremote/install-en.html). For development:
 
 ```bash
 cd firmware-idf-pure
@@ -76,19 +77,19 @@ pio run -t upload
 pio device monitor
 ```
 
-如果要重刷但保留已配空调，网页烧录时不要勾选 `Erase device`；NVS 里的 profiles 和 brand mask 会保留。
+When re-flashing from the browser, leave `Erase device` unchecked if you want to keep paired AC profiles and the brand mask stored in NVS.
 
-## 仓库结构
+## Repository Layout
 
 ```text
-docs/                 GitHub Pages 网页烧录器、配置页、固件二进制和文档图片
-firmware-idf-pure/    当前 ESP-IDF / PlatformIO 固件工程
-firmware/             旧版 Arduino/PlatformIO 工程
-msc-disk-files/       StickS3 作为 USB 磁盘暴露出来的说明文件
-tools/                生成 USB MSC FAT 镜像等辅助脚本
+docs/                 GitHub Pages web installer, configure pages, firmware binaries, and documentation images
+firmware-idf-pure/    Current ESP-IDF / PlatformIO firmware project
+firmware/             Older Arduino / PlatformIO firmware project
+msc-disk-files/       Files exposed by the StickS3 USB mass-storage drive
+tools/                Helper scripts, including USB MSC FAT image generation
 ```
 
-## Built with
+## Built With
 
 - [IRremoteESP8266](https://github.com/crankyoldgit/IRremoteESP8266) - AC protocol encoders.
 - [M5Unified](https://github.com/m5stack/M5Unified) - M5Stack board abstraction.
